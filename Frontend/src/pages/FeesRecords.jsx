@@ -18,7 +18,7 @@ fetchdata();
   return (
     <div>
       <Navbar/>
-      <div className='mt-30 '>
+      <div className='mt-30 m-4'>
       <table className="border-2 border-zinc-900">
   <thead>
   <tr>

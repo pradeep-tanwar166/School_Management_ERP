@@ -100,7 +100,7 @@ function fees() {
                 onChange={handleChange}
               value={feesdata.father_name}/>
                 <label htmlFor="">Roll no.</label>
-                <input className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg" type="number" name="roll_no"
+                <input className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg" type="text" name="roll_no"
                 onChange={handleChange}
               value={feesdata.roll_no}/>
               </div>
@@ -109,7 +109,7 @@ function fees() {
             <label htmlFor="">Transport fees</label>
             <input
               className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="number"
+              type="text"
              name="transport_fees"
              onChange={handleChange}
               value={feesdata.transport_fees}
@@ -119,7 +119,7 @@ function fees() {
             <label htmlFor="">Tuition fees</label>
             <input
               className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="number"
+              type="text"
               name="tuition_fees"
               onChange={handleChange}
               value={feesdata.tuition_fees}
@@ -129,7 +129,7 @@ function fees() {
             <label htmlFor="">Extra charges</label>
             <input
               className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="number"
+              type="text"
               name="extra_charges"
               onChange={handleChange}
               value={feesdata.extra_charges}
@@ -139,7 +139,7 @@ function fees() {
             <label htmlFor="">Exam fees</label>
             <input
               className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="number"
+              type="text"
               name="exam_fees"
               onChange={handleChange}
               value={feesdata.exam_fees}
@@ -149,7 +149,7 @@ function fees() {
             <label htmlFor="">fine</label>
             <input
               className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="number"
+              type="text"
               name="fine"
               onChange={handleChange}
               value={feesdata.fine}
@@ -159,7 +159,7 @@ function fees() {
             <label htmlFor="">Total:</label>
             <input
               className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="number"
+              type="text"
               name="total"
               onChange={handleChange}
               value={feesdata.total}
@@ -169,7 +169,7 @@ function fees() {
             <label htmlFor="">Deposit:</label>
             <input
               className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="number"
+              type="text"
               name="deposit"
               onChange={handleChange}
               value={feesdata.deposit}
@@ -179,7 +179,7 @@ function fees() {
             <label htmlFor="">Balance </label>
             <input
               className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="number"
+              type="text"
               name="balance"
               onChange={handleChange}
               value={feesdata.balance}
