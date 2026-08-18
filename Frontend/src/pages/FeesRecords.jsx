@@ -18,23 +18,23 @@ fetchdata();
   return (
     <div>
       <Navbar/>
-      <div className='mt-30 mx-25'>
+      <div className='mt-30 '>
       <table className="border-2 border-zinc-900">
   <thead>
   <tr>
-    <th className="border-2 border-zinc-900">Student name</th>
-    <th className="border-2 border-zinc-900">Father name</th>
-  <th className="border-2 border-zinc-900">Roll no.</th>
-  <th className="border-2 border-zinc-900">Transport fees</th>
-  <th className="border-2 border-zinc-900">Tuition fees</th>
-  <th className="border-2 border-zinc-900">Extra charges</th>
-  <th className="border-2 border-zinc-900">Exam fees</th>
-  <th className="border-2 border-zinc-900">Fine</th>
-  <th className="border-2 border-zinc-900">Total fees</th>
-  <th className="border-2 border-zinc-900">Deposit</th>
-  <th className="border-2 border-zinc-900">Balance</th>
-  <th className="border-2 border-zinc-900">Date</th>
-  <th className="border-2 border-zinc-900">month</th>
+    <th className="border-2 border-zinc-900 px-5">Student name</th>
+    <th className="border-2 border-zinc-900 px-5">Father name</th>
+  <th className="border-2 border-zinc-900 px-5">Roll no.</th>
+  <th className="border-2 border-zinc-900 px-5">Transport fees</th>
+  <th className="border-2 border-zinc-900 px-5">Tuition fees</th>
+  <th className="border-2 border-zinc-900 px-5">Extra charges</th>
+  <th className="border-2 border-zinc-900 px-5">Exam fees</th>
+  <th className="border-2 border-zinc-900 px-5">Fine</th>
+  <th className="border-2 border-zinc-900 px-5">Total fees</th>
+  <th className="border-2 border-zinc-900 px-5">Deposit</th>
+  <th className="border-2 border-zinc-900 px-5">Balance</th>
+  <th className="border-2 border-zinc-900 px-5">Date</th>
+  <th className="border-2 border-zinc-900 px-5">month</th>
   </tr>
   </thead>
 { feedata.map((fees,index)=>(
