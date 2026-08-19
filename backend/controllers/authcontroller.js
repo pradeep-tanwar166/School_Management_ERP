@@ -32,7 +32,7 @@ const signup = async (req, res) => {
     });
 
     await signupuser.save();
-    res.status(201).json({
+    return res.status(201).json({
       status: true,
       message: "signup data successfull",
     });

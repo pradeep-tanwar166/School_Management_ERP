@@ -3,14 +3,17 @@ const mongoose=require('mongoose');
 const feesdata=mongoose.Schema({
     date:{
         type:String,
+        trim:true,
     },
     month:{
         type:String,
+        trim:true,
     },
 
     student_name:{
         type:String,
         trim:true,
+        
     },
   
     father_name:{

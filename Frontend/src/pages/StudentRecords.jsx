@@ -52,8 +52,8 @@ function StudentRecords() {
   return (
     <div>
       <Navbar/>
-<div className=" mx-10 mt-20">
-           <h1>Students</h1>
+<div className=" m-4 mt-30">
+          
 
           
 {/* <input onChange={handleSearch} value={searchitem}  className='border-2 border-black p-4 mb-2 rounded-xl' type="text" placeholder='Search anything' />
@@ -62,20 +62,20 @@ function StudentRecords() {
 <table className="border-2 border-zinc-900">
   <thead>
   <tr>
-    <th className="border-2 border-zinc-900">Name</th>
-    <th className="border-2 border-zinc-900">Father name</th>
-    <th className="border-2 border-zinc-900">Mother name</th>
-  <th className="border-2 border-zinc-900">Mobile no.</th>
-  <th className="border-2 border-zinc-900">City</th>
-  <th className="border-2 border-zinc-900">Gender</th>
-  <th className="border-2 border-zinc-900">Adhar Number</th>
-  <th className="border-2 border-zinc-900">Religion</th>
-  <th className="border-2 border-zinc-900">Date of birth</th>
-  <th className="border-2 border-zinc-900">Place of birth</th>
-  <th className="border-2 border-zinc-900">Address</th>
-  <th className="border-2 border-zinc-900">State</th>
-  <th className="border-2 border-zinc-900">Postal/zip</th>
-  <th className="border-2 border-zinc-900">Date of admission</th>
+    <th className="border-2 border-zinc-900 px-5">Name</th>
+    <th className="border-2 border-zinc-900 px-5">Father name</th>
+    <th className="border-2 border-zinc-900 px-5">Mother name</th>
+  <th className="border-2 border-zinc-900 px-5">Mobile no.</th>
+  <th className="border-2 border-zinc-900 px-5">City</th>
+  <th className="border-2 border-zinc-900 px-5">Gender</th>
+  <th className="border-2 border-zinc-900 px-5">Adhar Number</th>
+  <th className="border-2 border-zinc-900 px-5">Religion</th>
+  <th className="border-2 border-zinc-900 px-5">Date of birth</th>
+  <th className="border-2 border-zinc-900 px-5">Place of birth</th>
+  <th className="border-2 border-zinc-900 px-5">Address</th>
+  <th className="border-2 border-zinc-900 px-5">State</th>
+  <th className="border-2 border-zinc-900 px-5">Postal/zip</th>
+  <th className="border-2 border-zinc-900 px-5">Date of admission</th>
   </tr>
   </thead>
 {  students.map((student,index)=>(
@@ -103,7 +103,7 @@ function StudentRecords() {
 </table>
   <button
         onClick={exportToExcel}
-        className="bg-green-600 text-white px-4 py-2 rounded"
+        className="bg-green-600 text-white px-4 py-2 rounded mt-5"
       >
         Export Excel
       </button>

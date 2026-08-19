@@ -93,8 +93,8 @@ event.preventDefault();
 
       <div className=" mt-30 h-250 w-300 rounded-md border-none shadow-2xl bg-white ">
         <form onSubmit={handleSubmit}>
-          <h1 className="text-5xl font-normal p-10">
-            Student Enrollment Form{" "}
+          <h1 className="text-5xl font-normal p-10 text-center font-semibold">
+            Student Enrollment Form
           </h1>
           <hr />
           <h2 className="p-5 text-2xl mx-20">Application form</h2>

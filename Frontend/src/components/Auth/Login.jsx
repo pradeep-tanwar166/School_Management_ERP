@@ -13,7 +13,7 @@ function Login() {
     password:""
   });
 
-  const [hidden,Sethidden]=useState(false);
+  const [hidden,Sethidden]=useState(true);
 
  const showPassword=(e)=>{
   e.preventDefault();
@@ -33,10 +33,10 @@ function Login() {
     event.preventDefault();
 try{
   let response=await api.post("auth/login",form);
+  alert("Login Successfull");
  localStorage.setItem("token", response.data.token);
  navigate("/");
   SetForm({email:"", password:""});
-  console.log('Login data successfully added');
 }
 catch(error){
   console.log(error);
