@@ -28,7 +28,7 @@ function App() {
       
       <Routes>
         <Route path='/login' element={<Login/>}></Route>
-
+ <Route path='/signup' element={<Signup/>}></Route>
             <Route element={<PrivateRoutes />}>
 
                 
@@ -37,7 +37,7 @@ function App() {
         <Route path="/fees" element={<Fees/>}></Route>
         <Route path="/studentrecords" element={<StudentRecords/>}></Route>
         <Route path="/feesrecords" element={<FeesRecords/>}></Route>
-        <Route path='/signup' element={<Signup/>}></Route>
+       
         
         </Route>
       </Routes>
