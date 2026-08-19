@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Navbar from '../Navbar';
 import { Link } from 'react-router-dom';
-import Signup from './signup';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from '../Services/api';
 import { useNavigate } from 'react-router-dom';
