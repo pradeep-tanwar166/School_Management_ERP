@@ -4,17 +4,16 @@ const fees=async(req,res)=>{
 const {date,month,student_name,father_name,roll_no,transport_fees,tuition_fees,extra_charges,exam_fees,fine,total,deposit,balance}=req.body;
 if ([date, month, student_name, father_name, roll_no, transport_fees, tuition_fees, extra_charges, exam_fees, fine, total, deposit, balance].some((value) => value === undefined || value === null || value === "")) {
     return res.status(500).json({
-        message:"Enter/fill all the inputs",
+        message:"Enter all the inputs, Check again",
         status:false,
     });
 }
 
     try{
-        const feesuser=await new feesdata({
+        const feesUser=await new feesdata({
             date,
             month,
             student_name,
-         
             father_name,
             roll_no,
             transport_fees,
@@ -26,7 +25,7 @@ if ([date, month, student_name, father_name, roll_no, transport_fees, tuition_fe
             deposit,
             balance
         });
-        await feesuser.save();
+        await feesUser.save();
         return res.status(201).json({
             message:"Fees data added successfully",
             status:true,
