@@ -88,8 +88,8 @@ catch(error){
             Login
           </button>
           <div className=" flex gap-4  justify-center">
-            <p className="text-white  ">Don't have an account ?</p>
-            <Link className='text-white hover:text-blue-500' to="/signup">Sign up  </Link>
+            <p className="text-gray-500  ">Don't have an account ?</p>
+            <Link className='text-blue-400 hover:text-blue-500' to="/signup">Sign up  </Link>
           </div>
         </form>
       </div>
