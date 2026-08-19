@@ -5,9 +5,11 @@ const cookieParser = require("cookie-parser");
 const app = express();
 require("dotenv").config();
 
-app.use(cors());
+app.use(cors({
+  origin:"https://schoolsmanagementerp.netlify.app/login",
+}));
 
-const port = 3000 || PORT;
+const port = 3000 || process.env.PORT;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

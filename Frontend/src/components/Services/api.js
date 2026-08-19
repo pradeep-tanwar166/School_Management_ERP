@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://school-management-erp-paye.onrender.com",
   headers: { "Content-Type":"Application/json"},
 });
 
