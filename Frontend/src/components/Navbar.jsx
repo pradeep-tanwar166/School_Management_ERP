@@ -1,7 +1,4 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { IoSunnyOutline } from "react-icons/io5";
-import { MdOutlineNightlight } from "react-icons/md";
 import logo from "../assets/Surya-logo4.png";
 import { useNavigate } from "react-router-dom";
 function Navbar() {

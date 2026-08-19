@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar';
 import api from '../components/Services/api';
 import * as XLSX from "xlsx";

@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Navbar from '../Navbar';
 import { Link } from 'react-router-dom';
-import Login from './Login';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from '../Services/api';
 
@@ -30,7 +29,7 @@ function Signup() {
   const handleSubmit=async(e)=>{
     e.preventDefault();
     try{
-      let response=await api.post("/auth/signup",signupdata);
+      await api.post("/auth/signup",signupdata);
       alert("Account created Sucessfully");
    SetSignUpData({username:"",email:"",mobile:"",password:""});
     console.log('Signup data successfully added');

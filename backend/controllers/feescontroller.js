@@ -2,7 +2,7 @@ const feesdata=require('../models/fees');
 
 const fees=async(req,res)=>{
 const {date,month,student_name,father_name,roll_no,transport_fees,tuition_fees,extra_charges,exam_fees,fine,total,deposit,balance}=req.body;
-if(!date,!month,!student_name,!father_name,!roll_no,!transport_fees,!tuition_fees,!extra_charges,!exam_fees,!fine,!total,!deposit,!balance){
+if ([date, month, student_name, father_name, roll_no, transport_fees, tuition_fees, extra_charges, exam_fees, fine, total, deposit, balance].some((value) => value === undefined || value === null || value === "")) {
     return res.status(500).json({
         message:"Enter/fill all the inputs",
         status:false,
@@ -29,7 +29,7 @@ if(!date,!month,!student_name,!father_name,!roll_no,!transport_fees,!tuition_fee
         await feesuser.save();
         return res.status(201).json({
             message:"Fees data added successfully",
-            status:false,
+            status:true,
         });
     }
     catch(error){

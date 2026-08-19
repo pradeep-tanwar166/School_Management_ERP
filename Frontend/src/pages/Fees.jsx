@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import api from '../components/Services/api';
 
-function fees() {
+function Fees() {
 
   const [feesdata,SetFeesData]=useState({
     date:"",
@@ -32,7 +32,7 @@ function fees() {
   const handleSubmit=async(event)=>{
     event.preventDefault();
     try{
-      let response=await api.post("/pages/fees",feesdata);
+      await api.post("/pages/fees",feesdata);
      alert("success")
       SetFeesData({
          date:"",
@@ -198,4 +198,4 @@ function fees() {
   );
 }
 
-export default fees;
+export default Fees;

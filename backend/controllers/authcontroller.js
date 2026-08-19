@@ -7,16 +7,16 @@ const signup = async (req, res) => {
   try {
     const { username, email, mobile, password } = req.body;
     if (!username || !email || !mobile || !password) {
-      return res.status(500).json({
+      return res.status(400).json({
         status: false,
-        message: "Internet server error ",
+        message: "All fields are required",
       });
     }
 
-    const exitstinguser = await user.findOne({ email });
+    const existingUser = await user.findOne({ email });
 
-    if (exitstinguser) {
-      return res.status(500).json({
+    if (existingUser) {
+      return res.status(409).json({
         status: false,
         message: "User already present",
       });
@@ -49,17 +49,17 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-     return res.status(500).json({
+     return res.status(400).json({
         status: false,
-        message: "Internet server error",
+        message: "Email and password are required",
       });
     }
 
     const loginuser = await user.findOne({ email });
      if (!loginuser) {
-      return res.status(500).json({
+      return res.status(401).json({
         status: false,
-        message: "Not user find",
+        message: "Invalid email or password",
       });
     }
 
@@ -68,32 +68,25 @@ const login = async (req, res) => {
       console.log(match);
 
       if (!match) {
-       return res.status(404).json({
+       return res.status(401).json({
           status: false,
-          message: "user not found",
+          message: "Invalid email or password",
         });
       }
-      // create jwt 
+      if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET is not configured");
+      }
 
-//       const token=jwt.sign({
-//         userid:loginuser._id,
-        
-//       },
-//     process.env.JWT_SECRET,
-//   {
-//     expiresIn:"1d",
-//   });
-// console.log(token);
-//   // store jwt in cookie
-//   res.cookie("token",token,{
-//     httponly:true,
-//     secure:false,
-//     sameSite:"lax",
-//   });
-    
-      return res.status(201).json({
+      const token = jwt.sign(
+        { userid: loginuser._id },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" },
+      );
+
+      return res.status(200).json({
         status:true,
         message:"Login successfully",
+        token,
       })
    
   } catch (error) {

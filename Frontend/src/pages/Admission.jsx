@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../components/Services/api";
-import { useEffect } from "react";
 
 
 function Admission() {
@@ -35,7 +34,7 @@ function Admission() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let response = await api.post("pages/admission", admissiondata);
+      await api.post("/pages/admission", admissiondata);
       alert('Student data added');
       Setadmissiondata({
         name: "",

@@ -1,5 +1,3 @@
-import React from 'react'
-import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Admission from './pages/Admission'
 import Fees from './pages/Fees';
@@ -7,20 +5,8 @@ import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
 import StudentRecords from './pages/StudentRecords';
 import FeesRecords from './pages/FeesRecords';
-import {  Routes, Route} from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import PrivateRoutes from "./components/PrivateRoutes";
-
-function Layout() {
-    return (
-        <>
-            <Navbar />
-
-            <Outlet />
-        </>
-    );
-}
-
-import { Outlet } from "react-router-dom";
 
 function App() {
   return (
