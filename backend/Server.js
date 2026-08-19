@@ -6,10 +6,10 @@ const app = express();
 require("dotenv").config();
 
 app.use(cors({
-  origin:"https://schoolsmanagementerp.netlify.app/login",
+  origin:"https://schoolsmanagementerp.netlify.app",
 }));
 
-const port = 3000 || process.env.PORT;
+const port =process.env.PORT;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
