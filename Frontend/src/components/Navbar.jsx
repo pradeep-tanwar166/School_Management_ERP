@@ -23,12 +23,18 @@ function Navbar() {
     <div>
       <nav className="h-20 w-full border-2 border-none bg-blue-800 flex justify-evenly fixed z-10000 top-0 items-center">
         <Link to="/">
-          <div className="">
+          <div className="flex items-center justify-center gap-4">
+            <div>
             <img
               className="h-20 w-auto object-contain"
               src={logo}
               alt="Not found"
             />
+            </div>
+            <div>
+              <h1 className="text-3xl text-white font-bold italic">SURYA ERP</h1>
+            </div>
+            
           </div>
         </Link>
         <Link className="text-white text-xl" to="/">
@@ -56,7 +62,7 @@ function Navbar() {
             Signup
           </Link>
           <button
-            className="p-2 bg-blue-400 mx-5 rounded-xl hover:bg-blue-500 text-white text-xl"
+            className="p-2 bg-blue-400 mx-5 rounded-xl hover:bg-blue-500 text-white text-xl cursor-pointer"
             onClick={logout}
           >
             Logout

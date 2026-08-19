@@ -52,7 +52,7 @@ function StudentRecords() {
   return (
     <div>
       <Navbar/>
-<div className=" m-4 mt-30">
+<div className="mt-30">
           
 
           
@@ -103,7 +103,7 @@ function StudentRecords() {
 </table>
   <button
         onClick={exportToExcel}
-        className="bg-green-600 text-white px-4 py-2 rounded mt-5"
+        className="bg-green-600 text-white px-4 py-2 rounded mt-5 cursor-pointer"
       >
         Export Excel
       </button>
