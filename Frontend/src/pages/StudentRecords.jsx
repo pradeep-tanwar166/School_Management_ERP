@@ -109,9 +109,9 @@ function StudentRecords() {
             </tr>
           </thead>
           <tbody >
-          {students.map((student, index) => (
+          {students.map((student) => (
             
-              <tr key={index}>
+              <tr key={student._id}>
                 <td className="border-2 border-zinc-900 p-2 text-center ">
                   {student.name}{" "}
                 </td>
@@ -156,9 +156,9 @@ function StudentRecords() {
                 </td>
                 <td className="border-2 border-zinc-900 p-2 text-center">
                   <button
-                    onClick={() => {
-                      deleteStudentData(student._id);
-                    }}
+                    onClick={() => 
+                      deleteStudentData(student._id)
+                    }
                     className="bg-red-500 text-white p-1 px-2 rounded-md"
                   >
                     Delete
