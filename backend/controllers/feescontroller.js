@@ -64,13 +64,13 @@ const deletefeesdata=async(req,res)=>{
                 message:"user not found",
                
             })
-            return res.status(200),json({
+            return res.status(200).json({
                 message:"Successfully deleted",
             });
         }
     }
     catch(error){
-        res.status(500).json({
+        return res.status(500).json({
             message:error.message,
         })
     }
