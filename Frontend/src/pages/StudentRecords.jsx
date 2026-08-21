@@ -46,7 +46,7 @@ function StudentRecords() {
       prevStudents.filter((student) => student._id !== id)
     );
 
-    alert("Data deleted successfully");
+   
 
   } catch (error) {
     console.log("FULL ERROR:", error);

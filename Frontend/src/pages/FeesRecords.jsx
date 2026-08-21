@@ -26,21 +26,14 @@ function FeesRecords() {
     try {
       setLoading(true);
 
-      console.log("Deleting:", id);
-
       const response = await api.delete(`/pages/fees/${id}`);
-
-      console.log("Delete response:", response.data);
-
       // Fetch latest data from MongoDB
       await fetchdata();
 
-       SetStudents((prevStudents) =>
+       SetFeesData((prevStudents) =>
       prevStudents.filter((feesdata) => feesdata._id !== id)
     );
 
-
-      alert("Data deleted successfully");
 
     } catch (error) {
       console.log("Delete error:", error);
