@@ -35,6 +35,11 @@ function FeesRecords() {
       // Fetch latest data from MongoDB
       await fetchdata();
 
+       SetStudents((prevStudents) =>
+      prevStudents.filter((feesdata) => feesdata._id !== id)
+    );
+
+
       alert("Data deleted successfully");
 
     } catch (error) {
