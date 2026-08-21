@@ -85,31 +85,26 @@ const getadmission = async (req, res) => {
   }
 };
 
-const deleteAdmissiondata = async (req, res) => {
-  try {
-    const user = await admissiondata.findByIdAndDelete(req.params.id);
+const deleteAdmissiondata=async(req,res)=>{
+  try{
+const user=await admissiondata.findByIdAndDelete(req.params.id);
+if(!user){
+  return res.status(404).json({
+    message:"user not found",
+    status:false,
+  });
 
-    if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-        status: false,
-      });
-    }
-
-    return res.status(200).json({
-      message: "Delete data successful",
-      status: true,
-    });
-
-  } catch (error) {
-    console.log("Delete error:", error);
-
-    return res.status(500).json({
-      message: error.message,
-      status: false,
-    });
+  return res.status(200).json({
+    message:"Delete data successfull",
+  })
+}
   }
-};
+  catch(error){
+     return res.status(500).json({
+      message:error.message,
+     });
+  }
+}
 
 module.exports = {
   admission,
