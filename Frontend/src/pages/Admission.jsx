@@ -2,14 +2,13 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../components/Services/api";
 
-
 function Admission() {
   const [admissiondata, Setadmissiondata] = useState({
     name: "",
-    father_name:"",
-    mother_name:"",
+    father_name: "",
+    mother_name: "",
     gender: "",
-    adhar_no:"",
+    adhar_no: "",
     religion: "",
     dateofbirth: "",
     placeofbirth: "",
@@ -19,29 +18,31 @@ function Admission() {
     city: "",
     state: "",
     postal_code: "",
-    
   });
 
- 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    Setadmissiondata((prevmode) => ({
-      ...prevmode,
+
+    Setadmissiondata((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       await api.post("/pages/admission", admissiondata);
-      alert('Student data added');
+
+      alert("Student data added");
+
       Setadmissiondata({
         name: "",
-        father_name:"",
-        mother_name:"",
+        father_name: "",
+        mother_name: "",
         gender: "",
-        adhar_no:"",
+        adhar_no: "",
         religion: "",
         dateofbirth: "",
         placeofbirth: "",
@@ -51,255 +52,481 @@ function Admission() {
         city: "",
         state: "",
         postal_code: "",
-       
       });
+
       console.log("Admission data entered successfully");
     } catch (error) {
       console.log(error);
     }
   };
 
-  
-const handleClear=(event)=>{
-event.preventDefault();
- Setadmissiondata({
-        name: "",
-       father_name:"",
-       mother_name:"",
-        gender: "",
-        adhar_no:"",
-        religion: "",
-        dateofbirth: "",
-        placeofbirth: "",
-        mobile_number: "",
-        address: "",
-        address2: "",
-        city: "",
-        state: "",
-        postal_code: "",
-       
-      });
-      alert("clear admission form");
+  const handleClear = (event) => {
+    event.preventDefault();
 
-}
+    Setadmissiondata({
+      name: "",
+      father_name: "",
+      mother_name: "",
+      gender: "",
+      adhar_no: "",
+      religion: "",
+      dateofbirth: "",
+      placeofbirth: "",
+      mobile_number: "",
+      address: "",
+      address2: "",
+      city: "",
+      state: "",
+      postal_code: "",
+    });
 
+    alert("Clear admission form");
+  };
+
+  const handleNew = () => {
+    Setadmissiondata({
+      name: "",
+      father_name: "",
+      mother_name: "",
+      gender: "",
+      adhar_no: "",
+      religion: "",
+      dateofbirth: "",
+      placeofbirth: "",
+      mobile_number: "",
+      address: "",
+      address2: "",
+      city: "",
+      state: "",
+      postal_code: "",
+    });
+  };
+
+  const handleEdit = () => {
+    alert("Edit mode enabled");
+  };
 
   return (
-    <div className="">
+    <div className="min-h-screen bg-white">
       <Navbar />
 
-      <div className="flex items-center justify-center bg-blue-300">
+      <div className="w-[95%] mx-auto py-6">
 
-      <div className=" mt-30 h-250 w-300 rounded-md border-none shadow-2xl bg-white ">
-        <form onSubmit={handleSubmit}>
-          <h1 className="text-5xl p-10 text-center font-semibold">
-            Student Enrollment Form
+        {/* HEADER */}
+        <div className="flex items-center justify-between mb-3">
+          <h1 className="text-2xl font-semibold text-gray-800">
+            Student Admission Master
           </h1>
-          <hr />
-          <h2 className="p-5 text-2xl mx-20">Application form</h2>
-          <hr />
 
-          <div className="mt-10 px-5">
-            <label htmlFor="name" className="mt-10 mx-5" htmlFor="">
-              Name*
-            </label>
-            <input
-            id="name"
-              className="border-2 rounded-md mx-2 text-black focus:ring-1 focus:ring-blue-500 outline-none border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="text"
-              placeholder="Enter name"
-              required
-              name="name"
-              onChange={handleChange}
-              value={admissiondata.name}
-            />
-            <input
-              className="border-2  mx-2 px-2 text-black focus:ring-1 focus:ring-blue-500 outline-none bg-slate-100 rounded-md border-slate-400 hover:border-blue-800 hover:shadow-2xl"
-              type="text"
-              placeholder="Enter your father_name"
-              name="father_name"
-              onChange={handleChange}
-              value={admissiondata.father_name}
-            />
-            <input
-              className="border-2 border-slate-400 px-2 text-black focus:ring-1 focus:ring-blue-500 outline-none bg-slate-100 rounded-md hover:border-blue-800 hover:shadow-2xl"
-              type="text"
-              placeholder="Enter your mother name"
-              name="mother_name"
-              onChange={handleChange}
-              value={admissiondata.mother_name}
-            />
-          </div>
-
-          <div className="m-10">
-            <label htmlFor="gender">Gender</label>
-            <select
-              className=" border-2 px-2 text-black bg-slate-100 rounded-md focus:ring-1 focus:ring-blue-500 outline-none mx-2 border-gray-400 hover:border-blue-600"
-              onChange={handleChange}
-              value={admissiondata.gender}
-              name="gender"
-              id="gender"
+          {/* TOP BUTTONS */}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleNew}
+              className="rounded-sm bg-[#3f7f9c] px-5 py-2 text-sm text-white
+              hover:bg-[#2c5f75]"
             >
-              Enter your Gender
-              <option ></option>
-              <option className="gender" value="Male">Male</option>
-              <option className="gender" value="Female">Female</option>
-              <option className="gender" value="Other">Other</option>
-            </select>
-          </div>
+              New
+            </button>
 
-          <div className="m-10">
+            <button
+              type="button"
+              onClick={handleEdit}
+              className="rounded-sm bg-[#3f7f9c] px-5 py-2 text-sm text-white
+              hover:bg-[#2c5f75]"
+            >
+              Edit
+            </button>
 
-            
-            <label htmlFor="adharcard">AdharCard no.</label>
-            <input
-            id="adharcard"
-              className="mt-5 border-2 px-2 text-black bg-slate-100 rounded-md m-5 focus:ring-1 focus:ring-blue-500 outline-none mx-2 border-slate-400 hover:border-blue-800 hover:shadow-2xl "
-              type="number"
-              placeholder="Enter your adharCard no."
-              name="adhar_no"
-              onChange={handleChange}
-              value={admissiondata.adhar_no}
-            minLength={12}
-            />
-
-            <label htmlFor="religion">Religion</label>
-            <input
-            id="religion"
-              className="mt-5 border-2 px-2 text-black bg-slate-100 rounded-md m-5 focus:ring-1 focus:ring-blue-500 outline-none mx-2 border-slate-400 hover:border-blue-800 hover:shadow-2xl "
-              type="text"
-              placeholder="Enter your religious"
-              name="religion"
-              onChange={handleChange}
-              value={admissiondata.religion}
-            
-            />
-          
-
-            <label htmlFor="dob">Date of birth*</label>
-            <input
-            id="dob"
-              className="mt-5 border-2 mx-2 px-2 text-black bg-slate-100 rounded-md focus:ring-1 focus:ring-blue-500 outline-none border-slate-400 hover:border-blue-800 hover:shadow-2xl "
-              type="date"
-              required
-              name="dateofbirth"
-              onChange={handleChange}
-              value={admissiondata.dateofbirth}
-            />
-          </div>
-
-          <div className="m-10">
-            <label htmlFor="placeofbirth">Enter Place of birth</label>
-            <input
-            id="placeofbirth"
-              className="mt-5 border-2 mx-2 px-2 text-black bg-slate-100 rounded-md focus:ring-1 focus:ring-blue-500 outline-none focus:outline-blue-800 border-slate-400 hover:border-blue-800 hover:shadow-2xl"
-              type="text"
-              placeholder="Enter your place of birth"
-              name="placeofbirth"
-              onChange={handleChange}
-              value={admissiondata.placeofbirth}
-            />
-          </div>
-
-          <div className="m-10">
-            <label htmlFor="mobile">Enter mobile number*</label>
-            <input
-            id="mobile"
-              className="mt-5 border-2 mx-2 px-2 text-black bg-slate-100 rounded-md focus:ring-1 focus:ring-blue-500 outline-none border-slate-400 hover:border-blue-800 hover:shadow-2xl"
-              type="tel"
-              placeholder="123-456-7890"
-              required
-              name="mobile_number"
-              onChange={handleChange}
-              value={admissiondata.mobile_number}
-              min={10}
-            />
-          </div>
-
-          <div className="m-10">
-            <div>
-              <label htmlFor="address">Address</label>
-              <input
-              id="address"
-                className="border-2 mx-2 px-2 text-black bg-slate-100 rounded-md focus:ring-1 focus:ring-blue-500 outline-none border-slate-400 hover:border-blue-800 hover:shadow-2xl w-200"
-                type="text"
-                placeholder="Enter your address"
-                name="address"
-                onChange={handleChange}
-                value={admissiondata.address}
-              />
-            </div>
-            <div>
-              <label htmlFor="address2">Address2</label>
-              <input
-              id="address2"
-                className="border-2 mx-2 px-2 text-black bg-slate-100 rounded-md focus:ring-1 focus:ring-blue-500 outline-none border-slate-400 hover:border-blue-800 hover:shadow-2xl w-200 mt-5"
-                type="text"
-                placeholder="Enter your adddress 2"
-                name="address2"
-                onChange={handleChange}
-                value={admissiondata.address2}
-              />
-            </div>
-          </div>
-
-          <div className="m-10">
-            <label htmlFor="city">city*</label>
-            <input
-            id="city"
-              className="border-2 mx-2 px-2 text-black bg-slate-100 rounded-md focus:ring-1 focus:ring-blue-500 outline-none border-slate-400 hover:border-blue-800 hover:shadow-2xl"
-              type="text"
-              placeholder="Enter your city"
-              required
-              name="city"
-              onChange={handleChange}
-              value={admissiondata.city}
-            />
-            <label htmlFor="state">State*</label>
-            <input
-            id="state"
-              className="border-2 mx-2 px-2 text-black bg-slate-100 rounded-md focus:ring-1 focus:ring-blue-500 outline-none border-slate-400 hover:border-blue-800 hover:shadow-2xl"
-              type="text"
-              placeholder="Enter your state"
-              required
-              name="state"
-              onChange={handleChange}
-              value={admissiondata.state}
-            />
-          </div>
-
-          <div className="m-10">
-            <label htmlFor="postal">Postal/zip code</label>
-            <input
-            id="postal"
-              className="border-2 mx-2 px-2 text-black bg-slate-100 rounded-md focus:ring-1 focus:ring-blue-500 outline-none border-slate-400 hover:border-blue-800 hover:shadow-2xl"
-              type="text"
-              placeholder="postal number"
-              name="postal_code"
-              onChange={handleChange}
-              value={admissiondata.postal_code}
-            />
-          </div>
-          <div className="flex gap-5 mx-10">
             <button
               type="submit"
-              className="bg-blue-400 p-2 rounded-md border-none text-white text-xl hover:bg-blue-500 "
+              form="admissionForm"
+              className="rounded-sm bg-[#3f7f9c] px-5 py-2 text-sm text-white
+              hover:bg-[#2c5f75]"
             >
-              Submit
+              Save
             </button>
-            <button  onClick={handleClear} className="bg-red-500 p-2 rounded-md border-none text-white text-xl hover:bg-red-600 ">
-              clear
+
+            <button
+              type="button"
+              onClick={handleClear}
+              className="rounded-sm bg-[#3f7f9c] px-5 py-2 text-sm text-white
+              hover:bg-[#2c5f75]"
+            >
+              Clear
             </button>
           </div>
+        </div>
+
+        <form
+          id="admissionForm"
+          onSubmit={handleSubmit}
+          className="border-t-[3px] border-[#2c7a8c]"
+        >
+
+          {/* ======================================================
+              STUDENT + PERSONAL INFORMATION
+          ======================================================= */}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-4">
+
+            {/* LEFT SECTION */}
+            <div
+              className="bg-[#d9d3c6] p-5
+              border-b-[3px] border-[#2c7a8c]"
+            >
+              <h2 className="mb-5 text-lg font-semibold text-gray-800">
+                Student Information
+              </h2>
+
+              {/* NAME */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Student Name
+                </label>
+
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  value={admissiondata.name}
+                  onChange={handleChange}
+                  placeholder="Enter student name"
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                />
+              </div>
+
+              {/* FATHER NAME */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Father Name
+                </label>
+
+                <input
+                  type="text"
+                  name="father_name"
+                  value={admissiondata.father_name}
+                  onChange={handleChange}
+                  placeholder="Enter father name"
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                />
+              </div>
+
+              {/* MOTHER NAME */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Mother Name
+                </label>
+
+                <input
+                  type="text"
+                  name="mother_name"
+                  value={admissiondata.mother_name}
+                  onChange={handleChange}
+                  placeholder="Enter mother name"
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                />
+              </div>
+
+              {/* MOBILE */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Mobile Number
+                </label>
+
+                <input
+                  type="tel"
+                  name="mobile_number"
+                  required
+                  value={admissiondata.mobile_number}
+                  onChange={handleChange}
+                  placeholder="Enter mobile number"
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                />
+              </div>
+
+              {/* AADHAAR */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Aadhaar No
+                </label>
+
+                <input
+                  type="text"
+                  name="adhar_no"
+                  maxLength={12}
+                  value={admissiondata.adhar_no}
+                  onChange={handleChange}
+                  placeholder="Enter Aadhaar number"
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                />
+              </div>
+            </div>
+
+            {/* RIGHT SECTION */}
+            <div
+              className="bg-[#d9d3c6] p-5
+              border-b-[3px] border-[#2c7a8c]"
+            >
+              <h2 className="mb-5 text-lg font-semibold text-gray-800">
+                Personal Information
+              </h2>
+
+              {/* GENDER */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Gender
+                </label>
+
+                <select
+                  name="gender"
+                  value={admissiondata.gender}
+                  onChange={handleChange}
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              {/* RELIGION */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Religion
+                </label>
+
+                <input
+                  type="text"
+                  name="religion"
+                  value={admissiondata.religion}
+                  onChange={handleChange}
+                  placeholder="Enter religion"
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                />
+              </div>
+
+              {/* DOB */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Date of Birth
+                </label>
+
+                <input
+                  type="date"
+                  name="dateofbirth"
+                  required
+                  value={admissiondata.dateofbirth}
+                  onChange={handleChange}
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                />
+              </div>
+
+              {/* PLACE OF BIRTH */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Place of Birth
+                </label>
+
+                <input
+                  type="text"
+                  name="placeofbirth"
+                  value={admissiondata.placeofbirth}
+                  onChange={handleChange}
+                  placeholder="Enter place of birth"
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ======================================================
+              ADDRESS SECTION
+          ======================================================= */}
+
+          <div className="mt-5 border-t-[3px] border-[#2c7a8c] pt-4">
+
+            <div
+              className="bg-[#d9d3c6] p-5
+              border-b-[3px] border-[#2c7a8c]"
+            >
+              <h2 className="mb-5 text-lg font-semibold text-gray-800">
+                Address Information
+              </h2>
+
+              {/* ADDRESS 1 */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Address-1
+                </label>
+
+                <input
+                  type="text"
+                  name="address"
+                  value={admissiondata.address}
+                  onChange={handleChange}
+                  placeholder="Enter address"
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                />
+              </div>
+
+              {/* ADDRESS 2 */}
+              <div className="grid grid-cols-[150px_1fr] items-center mb-3">
+                <label className="text-sm text-gray-800">
+                  Address-2
+                </label>
+
+                <input
+                  type="text"
+                  name="address2"
+                  value={admissiondata.address2}
+                  onChange={handleChange}
+                  placeholder="Enter address 2"
+                  className="w-full border border-gray-500 bg-[#f4f4f4]
+                  px-2 py-1.5 text-sm outline-none
+                  focus:border-[#2c7a8c]"
+                />
+              </div>
+
+              {/* CITY / STATE / POSTAL */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+                <div className="grid grid-cols-[70px_1fr] items-center">
+                  <label className="text-sm text-gray-800">
+                    City
+                  </label>
+
+                  <input
+                    type="text"
+                    name="city"
+                    required
+                    value={admissiondata.city}
+                    onChange={handleChange}
+                    placeholder="City"
+                    className="w-full border border-gray-500 bg-[#f4f4f4]
+                    px-2 py-1.5 text-sm outline-none
+                    focus:border-[#2c7a8c]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-[70px_1fr] items-center">
+                  <label className="text-sm text-gray-800">
+                    State
+                  </label>
+
+                  <input
+                    type="text"
+                    name="state"
+                    required
+                    value={admissiondata.state}
+                    onChange={handleChange}
+                    placeholder="State"
+                    className="w-full border border-gray-500 bg-[#f4f4f4]
+                    px-2 py-1.5 text-sm outline-none
+                    focus:border-[#2c7a8c]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-[90px_1fr] items-center">
+                  <label className="text-sm text-gray-800">
+                    Postal Code
+                  </label>
+
+                  <input
+                    type="text"
+                    name="postal_code"
+                    value={admissiondata.postal_code}
+                    onChange={handleChange}
+                    placeholder="Postal code"
+                    className="w-full border border-gray-500 bg-[#f4f4f4]
+                    px-2 py-1.5 text-sm outline-none
+                    focus:border-[#2c7a8c]"
+                  />
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          {/* ======================================================
+              BOTTOM SECTION
+          ======================================================= */}
+
+          <div className="mt-5 border-t-[3px] border-[#2c7a8c] pt-4 pb-10">
+
+            <div
+              className="bg-[#d9d3c6] p-5
+              border-b-[3px] border-[#2c7a8c]"
+            >
+
+              <div className="flex flex-col md:flex-row
+                md:items-center gap-4">
+
+                <label className="text-sm text-gray-800 whitespace-nowrap">
+                  Entry By User
+                </label>
+
+                <input
+                  type="text"
+                  value="Admin"
+                  readOnly
+                  className="w-40 border border-gray-500
+                  bg-[#f4f4f4] px-2 py-1.5 text-sm"
+                />
+
+                <div className="flex gap-2 md:ml-auto">
+
+                  <button
+                    type="submit"
+                    className="border border-gray-500
+                    bg-[#3f7f9c] px-6 py-2
+                    text-sm text-white hover:bg-[#2c5f75]"
+                  >
+                    Submit
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleClear}
+                    className="border border-gray-500
+                    bg-gray-300 px-6 py-2
+                    text-sm text-gray-800 hover:bg-gray-400"
+                  >
+                    Clear
+                  </button>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </form>
       </div>
-
-
-
-</div>
-
     </div>
   );
 }
 
 export default Admission;
+  
