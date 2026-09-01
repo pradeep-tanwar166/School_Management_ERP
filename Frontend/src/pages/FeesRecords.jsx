@@ -904,9 +904,7 @@ function FeesRecords() {
                             >
                               <FaTrash />
 
-                              {loading
-                                ? "Deleting..."
-                                : "Delete"}
+                              Delete
 
                             </button>
 
