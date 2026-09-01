@@ -124,52 +124,7 @@ function Fees() {
                 Manage student fee information
               </p>
             </div>
-
-            {/* HEADER BUTTONS */}
-
-            <div className="flex flex-wrap items-center gap-3">
-
-              {/* NEW */}
-
-              <button
-                type="button"
-                onClick={handleNew}
-                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
-              >
-                New
-              </button>
-
-              {/* EDIT */}
-
-              <button
-                type="button"
-                onClick={handleEdit}
-                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
-              >
-                Edit
-              </button>
-
-              {/* SAVE */}
-
-              <button
-                type="submit"
-                form="feesForm"
-                className="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-green-700"
-              >
-                Save
-              </button>
-
-              {/* CLEAR */}
-
-              <button
-                type="button"
-                onClick={handleClear}
-                className="rounded-lg bg-slate-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700"
-              >
-                Clear
-              </button>
-
-            </div>
+            
           </div>
 
           {/* ================= FORM ================= */}

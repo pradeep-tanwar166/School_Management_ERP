@@ -38,17 +38,7 @@ function Admission() {
     setFormData(initialData);
   };
 
-  // ================= NEW =================
-
-  const handleNew = () => {
-    setFormData(initialData);
-  };
-
-  // ================= EDIT =================
-
-  const handleEdit = () => {
-    alert("Select a student record to edit.");
-  };
+  
 
   // ================= SAVE / SUBMIT =================
 
@@ -56,14 +46,14 @@ function Admission() {
     event.preventDefault();
 
     try {
-      console.log("Submitting data:", formData);
+      
 
       const response = await api.post(
         "/pages/admission",
         formData
       );
 
-      console.log("Admission response:", response.data);
+     
 
       alert("Admission saved successfully");
 
@@ -71,17 +61,6 @@ function Admission() {
       setFormData(initialData);
 
     } catch (error) {
-      console.log("FULL ERROR:", error);
-
-      console.log(
-        "STATUS:",
-        error.response?.status
-      );
-
-      console.log(
-        "DATA:",
-        error.response?.data
-      );
 
       console.log(
         "MESSAGE:",
@@ -124,51 +103,9 @@ function Admission() {
               </p>
             </div>
 
-            {/* HEADER BUTTONS */}
+         
 
-            <div className="flex flex-wrap items-center gap-3">
-
-              {/* NEW */}
-
-              <button
-                type="button"
-                onClick={handleNew}
-                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
-              >
-                New
-              </button>
-
-              {/* EDIT */}
-
-              <button
-                type="button"
-                onClick={handleEdit}
-                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
-              >
-                Edit
-              </button>
-
-              {/* SAVE */}
-
-              <button
-                type="submit"
-                form="admissionForm"
-                className="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-green-700"
-              >
-                Save
-              </button>
-
-              {/* CLEAR */}
-
-              <button
-                type="button"
-                onClick={clearForm}
-                className="rounded-lg bg-slate-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700"
-              >
-                Clear
-              </button>
-
-            </div>
+           
           </div>
 
           {/* ================= FORM ================= */}
