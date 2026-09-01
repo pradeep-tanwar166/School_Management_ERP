@@ -7,10 +7,31 @@ import { FaSearch } from "react-icons/fa";
 import { FaFileExcel } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 
 function StudentRecords() {
   const [students, SetStudents] = useState([]);
   const [searchItem, setSearchItem] = useState("");
+
+  // ================= EDIT STATES =================
+
+  const [editingStudent, setEditingStudent] = useState(null);
+
+  const [editForm, setEditForm] = useState({
+    name: "",
+    father_name: "",
+    mother_name: "",
+    mobile_number: "",
+    city: "",
+    gender: "",
+    adhar_no: "",
+    religion: "",
+    dateofbirth: "",
+    placeofbirth: "",
+    address: "",
+    state: "",
+    postal_code: "",
+  });
 
   // ================= FETCH STUDENTS =================
 
@@ -35,7 +56,6 @@ function StudentRecords() {
       .trim()
       .toLowerCase();
 
-    // If search box is empty, show all students
     if (!search) {
       return true;
     }
@@ -167,13 +187,129 @@ function StudentRecords() {
 
       alert(
         error.response?.data?.message ||
-          error.message ||
-          "Failed to delete data"
+        error.message ||
+        "Failed to delete data"
       );
     }
   };
 
+  // ================= OPEN EDIT FORM =================
+
+  const handleEdit = (student) => {
+    console.log("Editing student:", student);
+
+    setEditingStudent(student);
+
+    setEditForm({
+      name: student.name || "",
+      father_name: student.father_name || "",
+      mother_name: student.mother_name || "",
+      mobile_number: student.mobile_number || "",
+      city: student.city || "",
+      gender: student.gender || "",
+      adhar_no: student.adhar_no || "",
+      religion: student.religion || "",
+      dateofbirth: student.dateofbirth
+        ? new Date(student.dateofbirth)
+            .toISOString()
+            .split("T")[0]
+        : "",
+      placeofbirth: student.placeofbirth || "",
+      address: student.address || "",
+      state: student.state || "",
+      postal_code: student.postal_code || "",
+    });
+  };
+
+  // ================= HANDLE EDIT INPUT =================
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+
+    setEditForm((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+  };
+
+  // ================= UPDATE STUDENT =================
+
+  const updateStudentData = async (id) => {
+    try {
+      console.log("Updating ID:", id);
+      console.log("Updating data:", editForm);
+
+      const response = await api.put(
+        `/pages/admission/${id}`,
+        editForm
+      );
+
+      console.log(
+        "Update response:",
+        response.data
+      );
+
+      // Refresh student list
+      await fetchstudent();
+
+      // Close edit form
+      setEditingStudent(null);
+
+      alert("Student updated successfully");
+
+    } catch (error) {
+      console.log(
+        "FULL UPDATE ERROR:",
+        error
+      );
+
+      console.log(
+        "STATUS:",
+        error.response?.status
+      );
+
+      console.log(
+        "DATA:",
+        error.response?.data
+      );
+
+      console.log(
+        "MESSAGE:",
+        error.message
+      );
+
+      alert(
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update student"
+      );
+    }
+  };
+
+  // ================= CANCEL EDIT =================
+
+  const cancelEdit = () => {
+    setEditingStudent(null);
+
+    setEditForm({
+      name: "",
+      father_name: "",
+      mother_name: "",
+      mobile_number: "",
+      city: "",
+      gender: "",
+      adhar_no: "",
+      religion: "",
+      dateofbirth: "",
+      placeofbirth: "",
+      address: "",
+      state: "",
+      postal_code: "",
+    });
+  };
+
   // ================= DATE FORMAT =================
+
   const formatDate = (date) => {
     if (!date) {
       return "-";
@@ -306,6 +442,302 @@ function StudentRecords() {
 
           </div>
 
+          {/* ================================================= */}
+          {/* ================= EDIT FORM ===================== */}
+          {/* ================================================= */}
+
+          {editingStudent && (
+            <div className="mb-5 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+
+              {/* EDIT HEADER */}
+
+              <div className="mb-6 flex items-center justify-between border-b border-slate-200 pb-4">
+
+                <div>
+                  <h2 className="text-xl font-bold text-slate-800">
+                    Edit Student
+                  </h2>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    Update information for{" "}
+                    <span className="font-semibold text-slate-700">
+                      {editingStudent.name}
+                    </span>
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={cancelEdit}
+                  className="rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-200"
+                >
+                  Cancel
+                </button>
+
+              </div>
+
+              {/* FORM */}
+
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+
+                {/* STUDENT NAME */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Student Name
+                  </label>
+
+                  <input
+                    type="text"
+                    name="name"
+                    value={editForm.name}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* FATHER NAME */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Father Name
+                  </label>
+
+                  <input
+                    type="text"
+                    name="father_name"
+                    value={editForm.father_name}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* MOTHER NAME */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Mother Name
+                  </label>
+
+                  <input
+                    type="text"
+                    name="mother_name"
+                    value={editForm.mother_name}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* MOBILE */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Mobile Number
+                  </label>
+
+                  <input
+                    type="text"
+                    name="mobile_number"
+                    value={editForm.mobile_number}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* CITY */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    City
+                  </label>
+
+                  <input
+                    type="text"
+                    name="city"
+                    value={editForm.city}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* GENDER */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Gender
+                  </label>
+
+                  <select
+                    name="gender"
+                    value={editForm.gender}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  >
+                    <option value="">
+                      Select Gender
+                    </option>
+
+                    <option value="Male">
+                      Male
+                    </option>
+
+                    <option value="Female">
+                      Female
+                    </option>
+
+                    <option value="Other">
+                      Other
+                    </option>
+                  </select>
+                </div>
+
+                {/* AADHAAR */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Aadhaar
+                  </label>
+
+                  <input
+                    type="text"
+                    name="adhar_no"
+                    value={editForm.adhar_no}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* RELIGION */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Religion
+                  </label>
+
+                  <input
+                    type="text"
+                    name="religion"
+                    value={editForm.religion}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* DATE OF BIRTH */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Date of Birth
+                  </label>
+
+                  <input
+                    type="date"
+                    name="dateofbirth"
+                    value={editForm.dateofbirth}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* PLACE OF BIRTH */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Place of Birth
+                  </label>
+
+                  <input
+                    type="text"
+                    name="placeofbirth"
+                    value={editForm.placeofbirth}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* STATE */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    State
+                  </label>
+
+                  <input
+                    type="text"
+                    name="state"
+                    value={editForm.state}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* POSTAL CODE */}
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Postal Code
+                  </label>
+
+                  <input
+                    type="text"
+                    name="postal_code"
+                    value={editForm.postal_code}
+                    onChange={handleEditChange}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                {/* ADDRESS */}
+
+                <div className="md:col-span-2 lg:col-span-3">
+
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Address
+                  </label>
+
+                  <textarea
+                    name="address"
+                    value={editForm.address}
+                    onChange={handleEditChange}
+                    rows="3"
+                    className="w-full resize-none rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+              </div>
+
+              {/* UPDATE BUTTON */}
+
+              <div className="mt-6 flex justify-end gap-3 border-t border-slate-200 pt-5">
+
+                <button
+                  type="button"
+                  onClick={cancelEdit}
+                  className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    updateStudentData(
+                      editingStudent._id
+                    )
+                  }
+                  className="flex items-center gap-2 rounded-lg bg-green-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700"
+                >
+                  <MdEdit />
+
+                  Update Student
+                </button>
+
+              </div>
+
+            </div>
+          )}
+
           {/* ================= TABLE CARD ================= */}
 
           <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -401,7 +833,7 @@ function StudentRecords() {
                     </th>
 
                     <th className="sticky top-0 border-b border-slate-200 px-4 py-4 text-center text-xs font-bold uppercase tracking-wide text-slate-600">
-                      Action
+                      Actions
                     </th>
 
                   </tr>
@@ -531,23 +963,43 @@ function StudentRecords() {
                             )}
                           </td>
 
-                          {/* ACTION */}
+                          {/* ACTIONS */}
 
-                          <td className="px-4 py-4 text-center">
+                          <td className="px-4 py-4">
 
-                            <button
-                              type="button"
-                              onClick={() =>
-                                deleteStudentData(
-                                  student._id
-                                )
-                              }
-                              className="inline-flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-600 hover:text-white"
-                            >
-                              <FaTrash />
+                            <div className="flex items-center justify-center gap-3">
 
-                              Delete
-                            </button>
+                              {/* DELETE */}
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  deleteStudentData(
+                                    student._id
+                                  )
+                                }
+                                className="inline-flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-600 hover:text-white"
+                              >
+                                <FaTrash />
+
+                                Delete
+                              </button>
+
+                              {/* EDIT */}
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleEdit(student)
+                                }
+                                className="inline-flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2 text-xs font-semibold text-green-600 transition hover:bg-green-600 hover:text-white"
+                              >
+                                <MdEdit />
+
+                                Edit
+                              </button>
+
+                            </div>
 
                           </td>
 

@@ -85,6 +85,35 @@ const getadmission = async (req, res) => {
   }
 };
 
+const updateAdmissiondata = async (req, res) => {
+  try {
+    const user = await admissiondata.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        status: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Updated user data successfully",
+      status: true,
+      data: user,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      status: false,
+    });
+  }
+};
+
 const deleteAdmissiondata=async(req,res)=>{
   try{
 const user=await admissiondata.findByIdAndDelete(req.params.id);
@@ -107,8 +136,11 @@ if(!user){
   }
 }
 
+
+
 module.exports = {
   admission,
   getadmission,
+  updateAdmissiondata,
   deleteAdmissiondata,
 };
