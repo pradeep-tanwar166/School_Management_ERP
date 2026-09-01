@@ -1,74 +1,119 @@
-import { Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+
 import logo from "../assets/Surya-logo4.png";
-import { useNavigate } from "react-router-dom";
-function Navbar() {
-  //   const [theme,SetTheme]=useState(false);
 
-  //   const changeTheme=(e)=>{
-  //     e.preventDefault();
-  //  SetTheme(!theme);
-  //   }
+import { FaHome } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
+import { FaMoneyBillWave } from "react-icons/fa";
+import { FaUserGraduate } from "react-icons/fa";
+import { FaReceipt } from "react-icons/fa";
 
+function Navbar({ sidebarWidth, onResize }) {
   const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("token");
-   alert("Logout Successfull");
+    alert("Logout Successful");
     navigate("/login");
   };
+
+  const menuItems = [
+    {
+      name: "Home",
+      path: "/",
+      icon: <FaHome />,
+    },
+    {
+      name: "Admission",
+      path: "/admission",
+      icon: <FaUserPlus />,
+    },
+    {
+      name: "Fees",
+      path: "/fees",
+      icon: <FaMoneyBillWave />,
+    },
+    {
+      name: "Student Records",
+      path: "/studentrecords",
+      icon: <FaUserGraduate />,
+    },
+    {
+      name: "Fees Records",
+      path: "/feesrecords",
+      icon: <FaReceipt />,
+    },
+  ];
+
   return (
-    <div>
-      <nav className="h-20 w-full border-2 border-none bg-blue-800 flex justify-evenly fixed z-10000 top-0 items-center">
+    <aside
+      className="fixed left-0 top-0 h-screen bg-blue-700 text-white z-50 shadow-2xl"
+      style={{
+        width: `${sidebarWidth}px`,
+      }}
+    >
+      {/* Logo */}
+      <div className="h-24 flex items-center justify-center border-b border-blue-600 px-3">
         <Link to="/">
-          <div className="flex items-center justify-center gap-4">
-            <div>
+          <div className="flex items-center gap-3">
             <img
-              className="h-20 w-auto object-contain"
               src={logo}
-              alt="Not found"
+              alt="Surya ERP"
+              className="h-16 w-auto object-contain"
             />
-            </div>
-            <div>
-              <h1 className="text-3xl text-white font-bold italic">SURYA ERP</h1>
-            </div>
-            
+
+            {sidebarWidth >= 250 && (
+              <h1 className="text-2xl font-bold italic">
+                SURYA ERP
+              </h1>
+            )}
           </div>
         </Link>
-        <Link className="text-white text-xl" to="/">
-          Home
-        </Link>
-        <Link className="text-white text-xl" to="/admission">
-          Admission
-        </Link>
-        <Link className="text-white text-xl" to="/fees">
-          Fees
-        </Link>
-        <Link className="text-white text-xl" to="/studentrecords">
-          StudentRecords
-        </Link>
-        <Link className="text-white text-xl" to="/feesrecords">
-          FeesRecords
-        </Link>
-        <div className="auth">
-          <Link className="text-white text-xl pr-10" to="/login">
-            {" "}
-            Login
-          </Link>
-          <Link className="text-white text-xl" to="/signup">
-            {" "}
-            Signup
-          </Link>
-          <button
-            className="p-2 bg-blue-400 mx-5 rounded-xl hover:bg-blue-500 text-white text-xl cursor-pointer"
-            onClick={logout}
+      </div>
+
+      {/* Menu */}
+      <nav className="flex flex-col gap-2 p-4">
+        {menuItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) =>
+              `flex items-center gap-4 rounded-lg px-4 py-3 transition ${
+                isActive
+                  ? "bg-blue-500 font-semibold"
+                  : "hover:bg-blue-600"
+              }`
+            }
           >
-            Logout
-          </button>
-        </div>
-        {/* <button onClick={changeTheme} className='text-2xl text-white'>{theme ? <IoSunnyOutline />
-:<MdOutlineNightlight />}</button> */}
+            <span className="text-xl">
+              {item.icon}
+            </span>
+
+            {sidebarWidth >= 250 && (
+              <span className="text-base">
+                {item.name}
+              </span>
+            )}
+          </NavLink>
+        ))}
       </nav>
-    </div>
+
+      {/* Logout */}
+      <div className="absolute bottom-5 left-0 w-full px-4">
+        <button
+          onClick={logout}
+          className="w-full rounded-lg bg-blue-400 px-4 py-3 text-lg hover:bg-blue-500 transition cursor-pointer"
+        >
+          {sidebarWidth >= 250 ? "Logout" : "↪"}
+        </button>
+      </div>
+
+      {/* Resize Handle */}
+      <div
+        onMouseDown={onResize}
+        className="absolute left-0 top-0 h-full w-1 cursor-col-resize bg-transparent hover:bg-blue-300"
+      />
+    </aside>
   );
 }
 

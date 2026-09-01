@@ -8,6 +8,7 @@ import FeesRecords from './pages/FeesRecords';
 import { Routes, Route } from 'react-router-dom'
 import PrivateRoutes from "./components/PrivateRoutes";
 
+
 function App() {
   return (
     <div>
@@ -21,7 +22,7 @@ function App() {
         <Route path="/fees" element={<Fees/>}></Route>
         <Route path="/studentrecords" element={<StudentRecords/>}></Route>
         <Route path="/feesrecords" element={<FeesRecords/>}></Route>
-       
+      
         
         </Route>
       </Routes>

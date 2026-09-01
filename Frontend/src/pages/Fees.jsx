@@ -1,199 +1,569 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
-import api from '../components/Services/api';
+import api from "../components/Services/api";
 
 function Fees() {
+  const initialData = {
+    date: "",
+    month: "",
+    student_name: "",
+    father_name: "",
+    roll_no: "",
+    transport_fees: "",
+    tuition_fees: "",
+    extra_charges: "",
+    exam_fees: "",
+    fine: "",
+    total: "",
+    deposit: "",
+    balance: "",
+  };
 
-  const [feesdata,SetFeesData]=useState({
-    date:"",
-    month:"",
-    student_name:"",
-  
-    father_name:"",
-    roll_no:"",
-    transport_fees:"",
-    tuition_fees:"",
-    extra_charges:"",
-    exam_fees:"",
-    fine:"",
-    total:"",
-    deposit:"",
-    balance:"",
-  });
+  const [feesdata, SetFeesData] = useState(initialData);
 
-  const handleChange=(e)=>{
-    const {name,value}=e.target;
+  // ================= HANDLE INPUT =================
 
-    SetFeesData((fees)=>({
-      ...fees,[name]:value,
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    SetFeesData((fees) => ({
+      ...fees,
+      [name]: value,
     }));
-  }
+  };
 
-  const handleSubmit=async(event)=>{
+  // ================= CLEAR FORM =================
+
+  const handleClear = () => {
+    SetFeesData(initialData);
+  };
+
+  // ================= NEW =================
+
+  const handleNew = () => {
+    SetFeesData(initialData);
+  };
+
+  // ================= SUBMIT / SAVE =================
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    try{
-      await api.post("/pages/fees",feesdata);
-     alert("success")
-      SetFeesData({
-         date:"",
-    month:"",
-    student_name:"",
- 
-    father_name:"",
-    roll_no:"",
-    transport_fees:"",
-    tuition_fees:"",
-    extra_charges:"",
-    exam_fees:"",
-    fine:"",
-    total:"",
-    deposit:"",
-    balance:"",
-      })
-      console.log('successfully');
+
+    try {
+      // Send form data to backend
+      const response = await api.post(
+        "/pages/fees",
+        feesdata
+      );
+
+      console.log("Fees response:", response.data);
+
+      alert("Fees submitted successfully");
+
+      // Clear form after successful submission
+      SetFeesData(initialData);
+
+    } catch (error) {
+      console.log("FULL ERROR:", error);
+
+      console.log(
+        "STATUS:",
+        error.response?.status
+      );
+
+      console.log(
+        "DATA:",
+        error.response?.data
+      );
+
+      console.log(
+        "MESSAGE:",
+        error.message
+      );
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to submit fees"
+      );
     }
-    catch(error){
-      console.log(error);
-    }
-  }
+  };
+
+  // ================= EDIT =================
+
+  const handleEdit = () => {
+    alert(
+      "Edit mode is ready. Select a fee record to edit."
+    );
+  };
 
   return (
-    <div className=" ">
+    <div className="min-h-screen bg-slate-100">
+
+      {/* ================= SIDEBAR ================= */}
+
       <Navbar />
-      <div className="flex items-center justify-center bg-blue-300 ">
-      <div className=" mt-30  h-220 w-300 rounded-md border-none shadow-2xl bg-white">
-        <h1 className="text-5xl mb-10 mt-5 text-center font-semibold">Fees Form</h1>
-        <hr />
-        <form onSubmit={handleSubmit}>
-          <div className="flex justify-between mt-10">
-            <input
-              className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none border-slate-400 px-2 text-black bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="Date"
-              placeholder="Enter the date"
-              name="date"
-              onChange={handleChange}
-              value={feesdata.date}
-            />
 
-              <input
-                className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-                type="month"
-                placeholder="Enter the month "
-                name="month"
-                onChange={handleChange}
-              value={feesdata.month}
-              />
+      {/* ================= MAIN CONTENT ================= */}
+
+      <main className="ml-24 min-h-screen px-5 py-6">
+
+        <div className="mx-auto max-w-7xl">
+
+          {/* ================= HEADER ================= */}
+
+          <div className="mb-5 flex flex-col gap-4 rounded-xl border border-slate-200 bg-white px-6 py-5 shadow-sm md:flex-row md:items-center md:justify-between">
+
+            {/* TITLE */}
+
+            <div>
+              <h1 className="text-2xl font-bold text-slate-800">
+                Fees Master
+              </h1>
+
+              <p className="mt-1 text-sm text-slate-500">
+                Manage student fee information
+              </p>
+            </div>
+
+            {/* HEADER BUTTONS */}
+
+            <div className="flex flex-wrap items-center gap-3">
+
+              {/* NEW */}
+
+              <button
+                type="button"
+                onClick={handleNew}
+                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+              >
+                New
+              </button>
+
+              {/* EDIT */}
+
+              <button
+                type="button"
+                onClick={handleEdit}
+                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+              >
+                Edit
+              </button>
+
+              {/* SAVE */}
+
+              <button
+                type="submit"
+                form="feesForm"
+                className="rounded-lg bg-green-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-green-700"
+              >
+                Save
+              </button>
+
+              {/* CLEAR */}
+
+              <button
+                type="button"
+                onClick={handleClear}
+                className="rounded-lg bg-slate-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700"
+              >
+                Clear
+              </button>
+
+            </div>
           </div>
 
-             <div className="mt-10 ml-10 flex ">
-                <label htmlFor="">Student Name</label>
-                <input className="border-2  rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg" type="text" name="student_name"
-                onChange={handleChange}
-              value={feesdata.student_name}  />
+          {/* ================= FORM ================= */}
 
-           
+          <form
+            id="feesForm"
+            onSubmit={handleSubmit}
+            className="space-y-5"
+          >
+
+            {/* ================= STUDENT INFORMATION ================= */}
+
+            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+
+              <div className="mb-6">
+
+                <h2 className="text-xl font-semibold text-slate-800">
+                  Student Information
+                </h2>
+
+                <div className="mt-3 h-px bg-cyan-600"></div>
+
               </div>
 
-              <div className="mt-10 ml-10 flex">
-                <label htmlFor="">Father's name</label>
-                <input className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg" type="text" name="father_name"
-                onChange={handleChange}
-              value={feesdata.father_name}/>
-                <label htmlFor="">Roll no.</label>
-                <input className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg" type="text" name="roll_no"
-                onChange={handleChange}
-              value={feesdata.roll_no}/>
+              <div className="grid grid-cols-1 gap-x-8 gap-y-5 md:grid-cols-2">
+
+                {/* DATE */}
+
+                <div>
+
+                  <label
+                    htmlFor="date"
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                  >
+                    Date
+                  </label>
+
+                  <input
+                    id="date"
+                    type="date"
+                    name="date"
+                    value={feesdata.date}
+                    onChange={handleChange}
+                    className="h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 text-sm outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+                {/* MONTH */}
+
+                <div>
+
+                  <label
+                    htmlFor="month"
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                  >
+                    Fee Month
+                  </label>
+
+                  <input
+                    id="month"
+                    type="month"
+                    name="month"
+                    value={feesdata.month}
+                    onChange={handleChange}
+                    className="h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 text-sm outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+                {/* STUDENT NAME */}
+
+                <div>
+
+                  <label
+                    htmlFor="student_name"
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                  >
+                    Student Name
+                  </label>
+
+                  <input
+                    id="student_name"
+                    type="text"
+                    name="student_name"
+                    value={feesdata.student_name}
+                    onChange={handleChange}
+                    placeholder="Enter student name"
+                    className="h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+                {/* FATHER NAME */}
+
+                <div>
+
+                  <label
+                    htmlFor="father_name"
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                  >
+                    Father's Name
+                  </label>
+
+                  <input
+                    id="father_name"
+                    type="text"
+                    name="father_name"
+                    value={feesdata.father_name}
+                    onChange={handleChange}
+                    placeholder="Enter father's name"
+                    className="h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+                {/* ROLL NUMBER */}
+
+                <div>
+
+                  <label
+                    htmlFor="roll_no"
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                  >
+                    Roll Number
+                  </label>
+
+                  <input
+                    id="roll_no"
+                    type="text"
+                    name="roll_no"
+                    value={feesdata.roll_no}
+                    onChange={handleChange}
+                    placeholder="Enter roll number"
+                    className="h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
               </div>
 
-          <div className="mt-10 ml-10">
-            <label htmlFor="">Transport fees</label>
-            <input
-              className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="text"
-             name="transport_fees"
-             onChange={handleChange}
-              value={feesdata.transport_fees}
-            />
-          </div>
-          <div className="mt-5 ml-10">
-            <label htmlFor="">Tuition fees</label>
-            <input
-              className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="text"
-              name="tuition_fees"
-              onChange={handleChange}
-              value={feesdata.tuition_fees}
-            />
-          </div>
-          <div className="mt-5 ml-10">
-            <label htmlFor="">Extra charges</label>
-            <input
-              className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="text"
-              name="extra_charges"
-              onChange={handleChange}
-              value={feesdata.extra_charges}
-            />
-          </div>
-          <div className="mt-5 ml-10">
-            <label htmlFor="">Exam fees</label>
-            <input
-              className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="text"
-              name="exam_fees"
-              onChange={handleChange}
-              value={feesdata.exam_fees}
-            />
-          </div>
-          <div className="mt-5 ml-10">
-            <label htmlFor="">fine</label>
-            <input
-              className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="text"
-              name="fine"
-              onChange={handleChange}
-              value={feesdata.fine}
-            />
-          </div>
-          <div className="mt-5 ml-10">
-            <label htmlFor="">Total:</label>
-            <input
-              className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="text"
-              name="total"
-              onChange={handleChange}
-              value={feesdata.total}
-            />
-          </div>
-          <div className="mt-5 ml-10">
-            <label htmlFor="">Deposit:</label>
-            <input
-              className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="text"
-              name="deposit"
-              onChange={handleChange}
-              value={feesdata.deposit}
-            />
-          </div>
-          <div className="mt-5 ml-10">
-            <label htmlFor="">Balance </label>
-            <input
-              className="border-2 rounded-md mx-2 focus:ring-1 focus:ring-blue-500 outline-none text-black border-slate-400 px-2 bg-slate-100  hover:border-blue-800 hover:shadow-lg"
-              type="text"
-              name="balance"
-              onChange={handleChange}
-              value={feesdata.balance}
-            />
-          </div>
-<div className="mt-10 ml-10 flex gap-10">
-<button type="submit" className="p-2 border-none bg-blue-500  text-xl rounded-2xl ">Submit</button>
-<button className="p-2 border-none bg-red-500  text-xl rounded-2xl ">Clear</button>
+            </section>
 
-</div>
-          
-        </form>
-      </div>
-      </div>
+            {/* ================= FEE DETAILS ================= */}
+
+            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+
+              <div className="mb-6">
+
+                <h2 className="text-xl font-semibold text-slate-800">
+                  Fee Details
+                </h2>
+
+                <div className="mt-3 h-px bg-cyan-600"></div>
+
+              </div>
+
+              <div className="grid grid-cols-1 gap-x-8 gap-y-5 md:grid-cols-2">
+
+                {/* TRANSPORT */}
+
+                <div>
+
+                  <label
+                    htmlFor="transport_fees"
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                  >
+                    Transport Fees
+                  </label>
+
+                  <input
+                    id="transport_fees"
+                    type="number"
+                    name="transport_fees"
+                    value={feesdata.transport_fees}
+                    onChange={handleChange}
+                    placeholder="Enter transport fees"
+                    className="h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+                {/* TUITION */}
+
+                <div>
+
+                  <label
+                    htmlFor="tuition_fees"
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                  >
+                    Tuition Fees
+                  </label>
+
+                  <input
+                    id="tuition_fees"
+                    type="number"
+                    name="tuition_fees"
+                    value={feesdata.tuition_fees}
+                    onChange={handleChange}
+                    placeholder="Enter tuition fees"
+                    className="h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+                {/* EXTRA */}
+
+                <div>
+
+                  <label
+                    htmlFor="extra_charges"
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                  >
+                    Extra Charges
+                  </label>
+
+                  <input
+                    id="extra_charges"
+                    type="number"
+                    name="extra_charges"
+                    value={feesdata.extra_charges}
+                    onChange={handleChange}
+                    placeholder="Enter extra charges"
+                    className="h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+                {/* EXAM */}
+
+                <div>
+
+                  <label
+                    htmlFor="exam_fees"
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                  >
+                    Exam Fees
+                  </label>
+
+                  <input
+                    id="exam_fees"
+                    type="number"
+                    name="exam_fees"
+                    value={feesdata.exam_fees}
+                    onChange={handleChange}
+                    placeholder="Enter exam fees"
+                    className="h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+                {/* FINE */}
+
+                <div>
+
+                  <label
+                    htmlFor="fine"
+                    className="mb-2 block text-sm font-semibold text-slate-700"
+                  >
+                    Fine
+                  </label>
+
+                  <input
+                    id="fine"
+                    type="number"
+                    name="fine"
+                    value={feesdata.fine}
+                    onChange={handleChange}
+                    placeholder="Enter fine"
+                    className="h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+              </div>
+
+            </section>
+
+            {/* ================= PAYMENT SUMMARY ================= */}
+
+            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+
+              <div className="mb-6">
+
+                <h2 className="text-xl font-semibold text-slate-800">
+                  Payment Summary
+                </h2>
+
+                <div className="mt-3 h-px bg-cyan-600"></div>
+
+              </div>
+
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+
+                {/* TOTAL */}
+
+                <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+
+                  <label
+                    htmlFor="total"
+                    className="mb-2 block text-sm font-semibold text-blue-900"
+                  >
+                    Total Fees
+                  </label>
+
+                  <input
+                    id="total"
+                    type="number"
+                    name="total"
+                    value={feesdata.total}
+                    onChange={handleChange}
+                    placeholder="Total amount"
+                    className="h-11 w-full rounded-md border border-blue-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+
+                </div>
+
+                {/* DEPOSIT */}
+
+                <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+
+                  <label
+                    htmlFor="deposit"
+                    className="mb-2 block text-sm font-semibold text-green-900"
+                  >
+                    Deposit
+                  </label>
+
+                  <input
+                    id="deposit"
+                    type="number"
+                    name="deposit"
+                    value={feesdata.deposit}
+                    onChange={handleChange}
+                    placeholder="Deposit amount"
+                    className="h-11 w-full rounded-md border border-green-200 bg-white px-3 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
+                  />
+
+                </div>
+
+                {/* BALANCE */}
+
+                <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+
+                  <label
+                    htmlFor="balance"
+                    className="mb-2 block text-sm font-semibold text-red-900"
+                  >
+                    Balance
+                  </label>
+
+                  <input
+                    id="balance"
+                    type="number"
+                    name="balance"
+                    value={feesdata.balance}
+                    onChange={handleChange}
+                    placeholder="Balance amount"
+                    className="h-11 w-full rounded-md border border-red-200 bg-white px-3 text-sm outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100"
+                  />
+
+                </div>
+
+              </div>
+
+            </section>
+
+            {/* ================= BOTTOM BUTTONS ================= */}
+
+            <div className="flex justify-end gap-3 pb-8">
+
+              <button
+                type="button"
+                onClick={handleClear}
+                className="rounded-lg bg-slate-500 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-600"
+              >
+                Clear
+              </button>
+
+              <button
+                type="submit"
+                className="rounded-lg bg-blue-600 px-7 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+              >
+                Submit Fees
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </main>
+
     </div>
   );
 }
