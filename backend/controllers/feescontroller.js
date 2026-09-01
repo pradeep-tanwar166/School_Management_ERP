@@ -56,6 +56,42 @@ const getfeesdata=async(req,res)=>{
     }
 }
 
+
+const updateFeesData = async (req, res) => {
+  try {
+    const fees = await feesdata.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!fees) {
+      return res.status(404).json({
+        message: "Fee record not found",
+        status: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Fee record updated successfully",
+      status: true,
+      data: fees,
+    });
+
+  } catch (error) {
+    console.log("UPDATE FEE ERROR:", error);
+
+    return res.status(500).json({
+      message: error.message,
+      status: false,
+    });
+  }
+};
+
+
 const deletefeesdata=async(req,res)=>{
     try{
         const user=await feesdata.findByIdAndDelete(req.params.id);
@@ -80,5 +116,6 @@ const deletefeesdata=async(req,res)=>{
 module.exports={
     fees,
     getfeesdata,
+    updateFeesData,
     deletefeesdata,
 }

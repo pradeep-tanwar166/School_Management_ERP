@@ -969,6 +969,20 @@ function StudentRecords() {
 
                             <div className="flex items-center justify-center gap-3">
 
+                                  {/* EDIT */}
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleEdit(student)
+                                }
+                                className="inline-flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2 text-xs font-semibold text-green-600 transition hover:bg-green-600 hover:text-white"
+                              >
+                                <MdEdit />
+
+                                Edit
+                              </button>
+
                               {/* DELETE */}
 
                               <button
@@ -985,19 +999,7 @@ function StudentRecords() {
                                 Delete
                               </button>
 
-                              {/* EDIT */}
-
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleEdit(student)
-                                }
-                                className="inline-flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2 text-xs font-semibold text-green-600 transition hover:bg-green-600 hover:text-white"
-                              >
-                                <MdEdit />
-
-                                Edit
-                              </button>
+                          
 
                             </div>
 
