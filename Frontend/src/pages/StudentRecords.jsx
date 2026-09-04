@@ -116,25 +116,37 @@ function StudentRecords() {
   });
 
   // ================= EXPORT TO EXCEL =================
+const exportToExcel = () => {
+  const exportData = students.map((student) => ({
+    Name: student.name,
+    "Father Name": student.father_name,
+    "Mother Name": student.mother_name,
+    Gender: student.gender,
+    "Aadhaar Card": String(student.adhar_no || ""),
+    "Mobile number":String(student.mobile_number || ""),
+    Religion: student.religion,
+    "Date of Birth": student.dateofbirth,
+    Address: student.address,
+    State: student.state,
+    Postal: student.postal_code,
+    "Created At": new Date(student.createdAt).toLocaleDateString("en-GB"),
+  }));
 
-  const exportToExcel = () => {
-    const worksheet =
-      XLSX.utils.json_to_sheet(students);
+  const worksheet = XLSX.utils.json_to_sheet(exportData);
 
-    const workbook = XLSX.utils.book_new();
+  const workbook = XLSX.utils.book_new();
 
-    XLSX.utils.book_append_sheet(
-      workbook,
-      worksheet,
-      "Students"
-    );
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    "Students"
+  );
 
-    XLSX.writeFile(
-      workbook,
-      "StudentRecords.xlsx"
-    );
-  };
-
+  XLSX.writeFile(
+    workbook,
+    "StudentRecords.xlsx"
+  );
+};
   // ================= DELETE STUDENT =================
 
   const deleteStudentData = async (id) => {
