@@ -207,6 +207,7 @@ function Admission() {
 
                   <input
                     id="mobile_number"
+                    maxLength={10}
                     type="tel"
                     name="mobile_number"
                     value={formData.mobile_number}
@@ -264,6 +265,7 @@ function Admission() {
                   <input
                     id="adhar_no"
                     type="text"
+                    maxLength={12}
                     name="adhar_no"
                     value={formData.adhar_no}
                     onChange={handleChange}
