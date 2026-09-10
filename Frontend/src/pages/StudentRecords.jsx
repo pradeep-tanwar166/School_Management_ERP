@@ -549,6 +549,8 @@ const exportToExcel = () => {
 
                   <input
                     type="text"
+                    minLength={10}
+                    maxLength={10}
                     name="mobile_number"
                     value={editForm.mobile_number}
                     onChange={handleEditChange}
@@ -613,6 +615,8 @@ const exportToExcel = () => {
                   <input
                     type="text"
                     name="adhar_no"
+                    minLength={12}
+                    maxLength={12}
                     value={editForm.adhar_no}
                     onChange={handleEditChange}
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"

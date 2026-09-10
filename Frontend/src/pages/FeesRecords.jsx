@@ -2,11 +2,18 @@ import Navbar from "../components/Navbar";
 import api from "../components/Services/api";
 import { useState, useEffect } from "react";
 
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaPrint, FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { FaTrash } from "react-icons/fa";
+
+import jsPDF from "jspdf";
+
 
 function FeesRecords() {
+
+  // =========================================================
+  // STATE
+  // =========================================================
+
   const [feedata, SetFeesData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -34,30 +41,49 @@ function FeesRecords() {
     month: "",
   });
 
-  // ================= FETCH FEES DATA =================
+
+  // =========================================================
+  // FETCH FEES DATA
+  // =========================================================
 
   const fetchdata = async () => {
+
     try {
+
+      setLoading(true);
+
       const response = await api.get("/pages/fees");
 
       SetFeesData(response.data.data || []);
+
     } catch (error) {
+
       console.log("Fetch error:", error);
 
       alert(
         error.response?.data?.message ||
           "Failed to fetch fee records"
       );
+
+    } finally {
+
+      setLoading(false);
+
     }
   };
+
 
   useEffect(() => {
     fetchdata();
   }, []);
 
-  // ================= SEARCH STUDENT =================
+
+  // =========================================================
+  // SEARCH STUDENT
+  // =========================================================
 
   const filteredFees = feedata.filter((fees) => {
+
     const search = searchItem
       .trim()
       .toLowerCase();
@@ -69,13 +95,26 @@ function FeesRecords() {
     return (
       String(fees.student_name || "")
         .toLowerCase()
+        .includes(search) ||
+
+      String(fees.father_name || "")
+        .toLowerCase()
+        .includes(search) ||
+
+      String(fees.roll_no || "")
+        .toLowerCase()
         .includes(search)
     );
+
   });
 
-  // ================= DELETE FEES =================
+
+  // =========================================================
+  // DELETE FEES
+  // =========================================================
 
   const deletedata = async (id) => {
+
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this fee record?"
     );
@@ -85,21 +124,30 @@ function FeesRecords() {
     }
 
     try {
+
       setLoading(true);
 
       await api.delete(`/pages/fees/${id}`);
 
       // Remove deleted record from UI
+
       SetFeesData((previousData) =>
         previousData.filter(
           (fees) => fees._id !== id
         )
       );
 
-      alert("Fee record deleted successfully");
+      alert(
+        "Fee record deleted successfully"
+      );
 
     } catch (error) {
-      console.log("Delete error:", error);
+
+      console.log(
+        "Delete error:",
+        error
+      );
+
       console.log(
         "Server response:",
         error.response?.data
@@ -109,19 +157,33 @@ function FeesRecords() {
         error.response?.data?.message ||
           "Failed to delete data"
       );
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
-  // ================= FORMAT DATE =================
+
+  // =========================================================
+  // FORMAT DATE
+  // =========================================================
 
   const formatDate = (date) => {
-    if (!date) return "-";
 
-    const formattedDate = new Date(date);
+    if (!date) {
+      return "-";
+    }
 
-    if (isNaN(formattedDate.getTime())) {
+    const formattedDate =
+      new Date(date);
+
+    if (
+      isNaN(
+        formattedDate.getTime()
+      )
+    ) {
       return date;
     }
 
@@ -130,17 +192,30 @@ function FeesRecords() {
     );
   };
 
-  // ================= OPEN EDIT FORM =================
+
+  // =========================================================
+  // OPEN EDIT FORM
+  // =========================================================
 
   const handleEdit = (fees) => {
-    console.log("Editing fee:", fees);
+
+    console.log(
+      "Editing fee:",
+      fees
+    );
 
     setEditingFee(fees);
 
     setEditForm({
-      student_name: fees.student_name || "",
-      father_name: fees.father_name || "",
-      roll_no: fees.roll_no || "",
+
+      student_name:
+        fees.student_name || "",
+
+      father_name:
+        fees.father_name || "",
+
+      roll_no:
+        fees.roll_no || "",
 
       transport_fees:
         fees.transport_fees ?? "",
@@ -172,45 +247,63 @@ function FeesRecords() {
             .split("T")[0]
         : "",
 
-      month: fees.month || "",
+      month:
+        fees.month || "",
+
     });
   };
 
-  // ================= HANDLE EDIT CHANGE =================
+
+  // =========================================================
+  // HANDLE EDIT CHANGE
+  // =========================================================
 
   const handleEditChange = (e) => {
-    const { name, value } = e.target;
 
-    setEditForm((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
+    const {
+      name,
+      value
+    } = e.target;
+
+    setEditForm(
+      (previous) => ({
+        ...previous,
+        [name]: value,
+      })
+    );
+
   };
 
-  // ================= UPDATE FEE =================
+
+  // =========================================================
+  // UPDATE FEE
+  // =========================================================
 
   const updateFeeData = async (id) => {
+
     try {
-      console.log("Updating Fee ID:", id);
+
+      console.log(
+        "Updating Fee ID:",
+        id
+      );
+
       console.log(
         "Updating Fee Data:",
         editForm
       );
 
-      const response = await api.put(
+      await api.put(
         `/pages/fees/${id}`,
         editForm
       );
 
-      console.log(
-        "Update response:",
-        response.data
-      );
-
       // Refresh data
+
       await fetchdata();
 
       // Close edit form
+
       setEditingFee(null);
 
       alert(
@@ -218,6 +311,7 @@ function FeesRecords() {
       );
 
     } catch (error) {
+
       console.log(
         "FULL UPDATE ERROR:",
         error
@@ -243,15 +337,21 @@ function FeesRecords() {
           error.message ||
           "Failed to update fee record"
       );
+
     }
   };
 
-  // ================= CANCEL EDIT =================
+
+  // =========================================================
+  // CANCEL EDIT
+  // =========================================================
 
   const cancelEdit = () => {
+
     setEditingFee(null);
 
     setEditForm({
+
       student_name: "",
       father_name: "",
       roll_no: "",
@@ -265,25 +365,1015 @@ function FeesRecords() {
       balance: "",
       date: "",
       month: "",
+
     });
   };
 
-  // ================= RETURN =================
+
+  // =========================================================
+  // PRINT / DOWNLOAD PDF
+  // =========================================================
+
+  const handlePrint = (fees) => {
+
+    try {
+
+      // =====================================================
+      // CREATE PDF
+      // =====================================================
+
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+
+
+      // =====================================================
+      // PAGE SETTINGS
+      // =====================================================
+
+      const pageWidth = 210;
+
+      const pageHeight = 297;
+
+      const margin = 15;
+
+
+      // =====================================================
+      // COLORS
+      // =====================================================
+
+      const blue = [30, 64, 175];
+
+      const dark = [30, 41, 59];
+
+      const gray = [100, 116, 139];
+
+      const lightGray = [
+        241,
+        245,
+        249,
+      ];
+
+      const green = [
+        22,
+        163,
+        74,
+      ];
+
+      const red = [
+        220,
+        38,
+        38,
+      ];
+
+      const border = [
+        203,
+        213,
+        225,
+      ];
+
+
+      // =====================================================
+      // HELPER
+      // =====================================================
+
+      const money = (value) => {
+
+        return `Rs. ${Number(
+          value || 0
+        ).toLocaleString("en-IN")}`;
+
+      };
+
+
+      const safeText = (value) => {
+
+        if (
+          value === null ||
+          value === undefined ||
+          value === ""
+        ) {
+          return "-";
+        }
+
+        return String(value);
+
+      };
+
+
+      // =====================================================
+      // SCHOOL HEADER
+      // =====================================================
+
+      pdf.setTextColor(
+        ...blue
+      );
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setFontSize(25);
+
+      pdf.text(
+        "SURYA SCHOOL",
+        pageWidth / 2,
+        20,
+        {
+          align: "center",
+        }
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
+
+      pdf.setFontSize(10);
+
+      pdf.setTextColor(
+        ...gray
+      );
+
+      pdf.text(
+        "",
+        pageWidth / 2,
+        27,
+        {
+          align: "center",
+        }
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setFontSize(16);
+
+      pdf.setTextColor(
+        ...dark
+      );
+
+      pdf.text(
+        "FEE PAYMENT RECEIPT",
+        pageWidth / 2,
+        35,
+        {
+          align: "center",
+        }
+      );
+
+
+      // Header line
+
+      pdf.setDrawColor(
+        ...blue
+      );
+
+      pdf.setLineWidth(1);
+
+      pdf.line(
+        margin,
+        41,
+        pageWidth - margin,
+        41
+      );
+
+
+      // =====================================================
+      // STUDENT INFORMATION
+      // =====================================================
+
+      let y = 50;
+
+
+      pdf.setDrawColor(
+        ...border
+      );
+
+      pdf.setLineWidth(0.4);
+
+      pdf.roundedRect(
+        margin,
+        y,
+        pageWidth - margin * 2,
+        48,
+        3,
+        3
+      );
+
+
+      // Title
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setFontSize(12);
+
+      pdf.setTextColor(
+        ...blue
+      );
+
+      pdf.text(
+        "STUDENT INFORMATION",
+        margin + 5,
+        y + 8
+      );
+
+
+      // Divider
+
+      pdf.setDrawColor(
+        ...border
+      );
+
+      pdf.line(
+        margin + 5,
+        y + 11,
+        pageWidth - margin - 5,
+        y + 11
+      );
+
+
+      // -----------------------------------------------------
+      // STUDENT NAME
+      // -----------------------------------------------------
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setFontSize(9);
+
+      pdf.setTextColor(
+        ...gray
+      );
+
+      pdf.text(
+        "Student Name",
+        margin + 5,
+        y + 19
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
+
+      pdf.setTextColor(
+        ...dark
+      );
+
+      pdf.text(
+        safeText(
+          fees.student_name
+        ),
+        margin + 5,
+        y + 25
+      );
+
+
+      // -----------------------------------------------------
+      // FATHER NAME
+      // -----------------------------------------------------
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setTextColor(
+        ...gray
+      );
+
+      pdf.text(
+        "Father Name",
+        110,
+        y + 19
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
+
+      pdf.setTextColor(
+        ...dark
+      );
+
+      pdf.text(
+        safeText(
+          fees.father_name
+        ),
+        110,
+        y + 25
+      );
+
+
+      // -----------------------------------------------------
+      // ROLL NO
+      // -----------------------------------------------------
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setTextColor(
+        ...gray
+      );
+
+      pdf.text(
+        "Roll No.",
+        margin + 5,
+        y + 35
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
+
+      pdf.setTextColor(
+        ...dark
+      );
+
+      pdf.text(
+        safeText(
+          fees.roll_no
+        ),
+        margin + 5,
+        y + 41
+      );
+
+
+      // -----------------------------------------------------
+      // MONTH
+      // -----------------------------------------------------
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setTextColor(
+        ...gray
+      );
+
+      pdf.text(
+        "Month",
+        70,
+        y + 35
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
+
+      pdf.setTextColor(
+        ...dark
+      );
+
+      pdf.text(
+        safeText(
+          fees.month
+        ),
+        70,
+        y + 41
+      );
+
+
+      // -----------------------------------------------------
+      // DATE
+      // -----------------------------------------------------
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setTextColor(
+        ...gray
+      );
+
+      pdf.text(
+        "Payment Date",
+        125,
+        y + 35
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
+
+      pdf.setTextColor(
+        ...dark
+      );
+
+      pdf.text(
+        formatDate(
+          fees.date
+        ),
+        125,
+        y + 41
+      );
+
+
+      // =====================================================
+      // FEE DETAILS
+      // =====================================================
+
+      y = 108;
+
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setFontSize(13);
+
+      pdf.setTextColor(
+        ...blue
+      );
+
+      pdf.text(
+        "FEE DETAILS",
+        margin,
+        y
+      );
+
+
+      y += 7;
+
+
+      // =====================================================
+      // TABLE SETTINGS
+      // =====================================================
+
+      const tableX = margin;
+
+      const tableWidth =
+        pageWidth - margin * 2;
+
+
+      // =====================================================
+      // TABLE HEADER
+      // =====================================================
+
+      pdf.setFillColor(
+        ...lightGray
+      );
+
+      pdf.setDrawColor(
+        ...border
+      );
+
+      pdf.rect(
+        tableX,
+        y,
+        tableWidth,
+        10,
+        "FD"
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setFontSize(10);
+
+      pdf.setTextColor(
+        ...dark
+      );
+
+
+      pdf.text(
+        "Fee Description",
+        tableX + 5,
+        y + 6.5
+      );
+
+
+      pdf.text(
+        "Amount",
+        tableX +
+          tableWidth -
+          5,
+        y + 6.5,
+        {
+          align: "right",
+        }
+      );
+
+
+      y += 10;
+
+
+      // =====================================================
+      // ADD TABLE ROW
+      // =====================================================
+
+      const addRow = (
+        label,
+        value,
+        options = {}
+      ) => {
+
+        const rowHeight =
+          options.height || 10;
+
+
+        // Background
+
+        if (
+          options.background
+        ) {
+
+          pdf.setFillColor(
+            ...options.background
+          );
+
+        } else {
+
+          pdf.setFillColor(
+            255,
+            255,
+            255
+          );
+
+        }
+
+
+        // Border
+
+        pdf.setDrawColor(
+          ...border
+        );
+
+
+        pdf.rect(
+          tableX,
+          y,
+          tableWidth,
+          rowHeight,
+          "FD"
+        );
+
+
+        // Font
+
+        pdf.setFont(
+          "helvetica",
+          options.bold
+            ? "bold"
+            : "normal"
+        );
+
+
+        pdf.setFontSize(
+          options.fontSize || 10
+        );
+
+
+        pdf.setTextColor(
+          ...(options.textColor ||
+            dark)
+        );
+
+
+        // Label
+
+        pdf.text(
+          label,
+          tableX + 5,
+          y + rowHeight / 2 + 1.5
+        );
+
+
+        // Amount
+
+        pdf.text(
+          money(value),
+          tableX +
+            tableWidth -
+            5,
+          y + rowHeight / 2 + 1.5,
+          {
+            align: "right",
+          }
+        );
+
+
+        y += rowHeight;
+
+      };
+
+
+      // =====================================================
+      // FEE ROWS
+      // =====================================================
+
+      addRow(
+        "Transport Fees",
+        fees.transport_fees
+      );
+
+
+      addRow(
+        "Tuition Fees",
+        fees.tuition_fees
+      );
+
+
+      addRow(
+        "Extra Charges",
+        fees.extra_charges
+      );
+
+
+      addRow(
+        "Exam Fees",
+        fees.exam_fees
+      );
+
+
+      addRow(
+        "Fine",
+        fees.fine
+      );
+
+
+      // =====================================================
+      // TOTAL
+      // =====================================================
+
+      addRow(
+        "TOTAL FEES",
+        fees.total,
+        {
+          bold: true,
+          fontSize: 11,
+          background: [
+            239,
+            246,
+            255,
+          ],
+          textColor: blue,
+          height: 13,
+        }
+      );
+
+
+      // =====================================================
+      // DEPOSIT
+      // =====================================================
+
+      addRow(
+        "DEPOSIT / PAID",
+        fees.deposit,
+        {
+          bold: true,
+          fontSize: 11,
+          background: [
+            240,
+            253,
+            244,
+          ],
+          textColor: green,
+          height: 13,
+        }
+      );
+
+
+      // =====================================================
+      // BALANCE
+      // =====================================================
+
+      addRow(
+        "REMAINING BALANCE",
+        fees.balance,
+        {
+          bold: true,
+          fontSize: 12,
+          background: [
+            254,
+            242,
+            242,
+          ],
+          textColor: red,
+          height: 14,
+        }
+      );
+
+
+      // =====================================================
+      // PAYMENT STATUS
+      // =====================================================
+
+      y += 12;
+
+
+      const balance =
+        Number(
+          fees.balance || 0
+        );
+
+
+      const paymentStatus =
+        balance > 0
+          ? "PARTIALLY PAID"
+          : "FULLY PAID";
+
+
+      pdf.setDrawColor(
+        ...border
+      );
+
+
+      pdf.roundedRect(
+        margin,
+        y,
+        tableWidth,
+        17,
+        3,
+        3
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setFontSize(10);
+
+      pdf.setTextColor(
+        ...gray
+      );
+
+
+      pdf.text(
+        "PAYMENT STATUS",
+        margin + 5,
+        y + 10.5
+      );
+
+
+      if (balance > 0) {
+
+        pdf.setTextColor(
+          180,
+          83,
+          9
+        );
+
+      } else {
+
+        pdf.setTextColor(
+          ...green
+        );
+
+      }
+
+
+      pdf.text(
+        paymentStatus,
+        pageWidth -
+          margin -
+          5,
+        y + 10.5,
+        {
+          align: "right",
+        }
+      );
+
+
+      // =====================================================
+      // SIGNATURES
+      // =====================================================
+
+      y = 250;
+
+
+      pdf.setDrawColor(
+        ...dark
+      );
+
+      pdf.setLineWidth(
+        0.4
+      );
+
+
+      // Parent Signature
+
+      pdf.line(
+        25,
+        y,
+        80,
+        y
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
+
+      pdf.setFontSize(9);
+
+      pdf.setTextColor(
+        ...dark
+      );
+
+
+      pdf.text(
+        "Parent Signature",
+        52.5,
+        y + 6,
+        {
+          align: "center",
+        }
+      );
+
+
+      // Authorized Signature
+
+      pdf.line(
+        130,
+        y,
+        185,
+        y
+      );
+
+
+      pdf.text(
+        "Authorized Signature",
+        157.5,
+        y + 6,
+        {
+          align: "center",
+        }
+      );
+
+
+      // =====================================================
+      // FOOTER
+      // =====================================================
+
+      pdf.setDrawColor(
+        ...border
+      );
+
+
+      pdf.line(
+        margin,
+        270,
+        pageWidth - margin,
+        270
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "bold"
+      );
+
+      pdf.setFontSize(11);
+
+      pdf.setTextColor(
+        ...blue
+      );
+
+
+      pdf.text(
+        "",
+        pageWidth / 2,
+        278,
+        {
+          align: "center",
+        }
+      );
+
+
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
+
+      pdf.setFontSize(8);
+
+      pdf.setTextColor(
+        ...gray
+      );
+
+
+      pdf.text(
+        "Generated by SuryaERP",
+        pageWidth / 2,
+        284,
+        {
+          align: "center",
+        }
+      );
+
+
+      // =====================================================
+      // FILE NAME
+      // =====================================================
+
+      const studentName =
+        fees.student_name
+          ?.replace(
+            /[^a-zA-Z0-9]/g,
+            "_"
+          ) || "Student";
+
+
+      const rollNo =
+        fees.roll_no ||
+        "Unknown";
+
+
+      const month =
+        fees.month ||
+        "Fee";
+
+
+      const fileName =
+        `Fee_Receipt_${studentName}_${rollNo}_${month}.pdf`;
+
+
+      // =====================================================
+      // DOWNLOAD PDF
+      // =====================================================
+
+      pdf.save(
+        fileName
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "PDF generation error:",
+        error
+      );
+
+      alert(
+        "Failed to generate fee receipt PDF"
+      );
+
+    }
+
+  };
+
+
+  // =========================================================
+  // RETURN
+  // =========================================================
 
   return (
+
     <div className="min-h-screen bg-slate-100">
 
-      {/* ================= NAVBAR ================= */}
+      {/* =====================================================
+          NAVBAR
+      ====================================================== */}
 
       <Navbar />
 
-      {/* ================= MAIN ================= */}
+
+      {/* =====================================================
+          MAIN
+      ====================================================== */}
 
       <main className="ml-24 min-h-screen px-5 py-6">
 
         <div className="mx-auto max-w-full">
 
-          {/* ================= HEADER ================= */}
+
+          {/* =================================================
+              HEADER
+          ================================================== */}
 
           <div className="mb-5 rounded-xl border border-slate-200 bg-white px-6 py-5 shadow-sm">
 
@@ -303,6 +1393,7 @@ function FeesRecords() {
 
               </div>
 
+
               {/* RECORD COUNT */}
 
               <div className="rounded-lg bg-blue-50 px-5 py-3 text-center">
@@ -321,7 +1412,10 @@ function FeesRecords() {
 
           </div>
 
-          {/* ================= SEARCH ================= */}
+
+          {/* =================================================
+              SEARCH
+          ================================================== */}
 
           <div className="mb-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
 
@@ -329,29 +1423,39 @@ function FeesRecords() {
 
               <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
 
+
               <input
                 type="text"
                 value={searchItem}
                 onChange={(e) =>
-                  setSearchItem(e.target.value)
+                  setSearchItem(
+                    e.target.value
+                  )
                 }
-                placeholder="Search student by name..."
+                placeholder="Search student by name, father name or roll number..."
                 className="h-11 w-full rounded-lg border border-slate-300 bg-slate-50 pl-11 pr-20 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
               />
 
+
               {searchItem && (
+
                 <button
                   type="button"
-                  onClick={() => setSearchItem("")}
+                  onClick={() =>
+                    setSearchItem("")
+                  }
                   className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md px-2 py-1 text-xs font-semibold text-slate-400 hover:bg-slate-200 hover:text-slate-700"
                 >
                   Clear
                 </button>
+
               )}
 
             </div>
 
+
             {searchItem && (
+
               <p className="mt-3 text-sm text-slate-500">
 
                 Showing{" "}
@@ -363,16 +1467,20 @@ function FeesRecords() {
                 {" "}matching fee records
 
               </p>
+
             )}
 
           </div>
 
-          {/* ================================================= */}
-          {/* ================= EDIT FORM ===================== */}
-          {/* ================================================= */}
+
+          {/* =================================================
+              EDIT FORM
+          ================================================== */}
 
           {editingFee && (
+
             <div className="mb-5 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+
 
               {/* EDIT HEADER */}
 
@@ -385,6 +1493,7 @@ function FeesRecords() {
                   </h2>
 
                   <p className="mt-1 text-sm text-slate-500">
+
                     Update fee information for{" "}
 
                     <span className="font-semibold text-slate-700">
@@ -394,6 +1503,7 @@ function FeesRecords() {
                   </p>
 
                 </div>
+
 
                 <button
                   type="button"
@@ -405,9 +1515,11 @@ function FeesRecords() {
 
               </div>
 
-              {/* ================= FORM ================= */}
+
+              {/* FORM */}
 
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+
 
                 {/* STUDENT NAME */}
 
@@ -420,12 +1532,17 @@ function FeesRecords() {
                   <input
                     type="text"
                     name="student_name"
-                    value={editForm.student_name}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.student_name
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* FATHER NAME */}
 
@@ -438,12 +1555,17 @@ function FeesRecords() {
                   <input
                     type="text"
                     name="father_name"
-                    value={editForm.father_name}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.father_name
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* ROLL NUMBER */}
 
@@ -456,12 +1578,17 @@ function FeesRecords() {
                   <input
                     type="text"
                     name="roll_no"
-                    value={editForm.roll_no}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.roll_no
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* TRANSPORT */}
 
@@ -474,12 +1601,17 @@ function FeesRecords() {
                   <input
                     type="number"
                     name="transport_fees"
-                    value={editForm.transport_fees}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.transport_fees
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* TUITION */}
 
@@ -492,12 +1624,17 @@ function FeesRecords() {
                   <input
                     type="number"
                     name="tuition_fees"
-                    value={editForm.tuition_fees}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.tuition_fees
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* EXTRA CHARGES */}
 
@@ -510,12 +1647,17 @@ function FeesRecords() {
                   <input
                     type="number"
                     name="extra_charges"
-                    value={editForm.extra_charges}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.extra_charges
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* EXAM */}
 
@@ -528,12 +1670,17 @@ function FeesRecords() {
                   <input
                     type="number"
                     name="exam_fees"
-                    value={editForm.exam_fees}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.exam_fees
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* FINE */}
 
@@ -546,12 +1693,17 @@ function FeesRecords() {
                   <input
                     type="number"
                     name="fine"
-                    value={editForm.fine}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.fine
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* TOTAL */}
 
@@ -564,12 +1716,17 @@ function FeesRecords() {
                   <input
                     type="number"
                     name="total"
-                    value={editForm.total}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.total
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* DEPOSIT */}
 
@@ -582,12 +1739,17 @@ function FeesRecords() {
                   <input
                     type="number"
                     name="deposit"
-                    value={editForm.deposit}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.deposit
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* BALANCE */}
 
@@ -600,12 +1762,17 @@ function FeesRecords() {
                   <input
                     type="number"
                     name="balance"
-                    value={editForm.balance}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.balance
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* DATE */}
 
@@ -618,12 +1785,17 @@ function FeesRecords() {
                   <input
                     type="date"
                     name="date"
-                    value={editForm.date}
-                    onChange={handleEditChange}
+                    value={
+                      editForm.date
+                    }
+                    onChange={
+                      handleEditChange
+                    }
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
                 </div>
+
 
                 {/* MONTH */}
 
@@ -636,9 +1808,13 @@ function FeesRecords() {
                   <input
                     type="text"
                     name="month"
-                    value={editForm.month}
-                    onChange={handleEditChange}
-                    placeholder="e.g. January"
+                    value={
+                      editForm.month
+                    }
+                    onChange={
+                      handleEditChange
+                    }
+                    placeholder="e.g. 2026-07"
                     className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
 
@@ -646,17 +1822,21 @@ function FeesRecords() {
 
               </div>
 
-              {/* ================= UPDATE BUTTON ================= */}
+
+              {/* UPDATE BUTTONS */}
 
               <div className="mt-6 flex justify-end gap-3 border-t border-slate-200 pt-5">
 
                 <button
                   type="button"
-                  onClick={cancelEdit}
+                  onClick={
+                    cancelEdit
+                  }
                   className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
                 >
                   Cancel
                 </button>
+
 
                 <button
                   type="button"
@@ -670,16 +1850,22 @@ function FeesRecords() {
                   <MdEdit />
 
                   Update Fee
+
                 </button>
 
               </div>
 
             </div>
+
           )}
 
-          {/* ================= TABLE CARD ================= */}
+
+          {/* =================================================
+              TABLE CARD
+          ================================================== */}
 
           <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+
 
             {/* TABLE HEADER */}
 
@@ -697,23 +1883,35 @@ function FeesRecords() {
 
               </div>
 
+
               <button
                 type="button"
-                onClick={fetchdata}
-                className="w-fit rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                onClick={
+                  fetchdata
+                }
+                disabled={
+                  loading
+                }
+                className="w-fit rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Refresh
+                {loading
+                  ? "Loading..."
+                  : "Refresh"}
               </button>
 
             </div>
 
-            {/* ================= TABLE ================= */}
+
+            {/* =================================================
+                TABLE
+            ================================================== */}
 
             <div className="w-full overflow-x-auto">
 
               <table className="w-full min-w-[1500] border-collapse">
 
-                {/* ================= TABLE HEAD ================= */}
+
+                {/* TABLE HEAD */}
 
                 <thead>
 
@@ -772,153 +1970,255 @@ function FeesRecords() {
                     </th>
 
                     <th className="whitespace-nowrap border-b border-slate-200 px-5 py-4 text-center text-sm font-semibold text-slate-700">
-                      Action
+                      Actions
                     </th>
 
                   </tr>
 
                 </thead>
 
-                {/* ================= TABLE BODY ================= */}
+
+                {/* =================================================
+                    TABLE BODY
+                ================================================== */}
 
                 <tbody>
 
                   {filteredFees.length > 0 ? (
 
-                    filteredFees.map((fees) => (
+                    filteredFees.map(
+                      (fees) => (
 
-                      <tr
-                        key={fees._id}
-                        className="transition hover:bg-slate-50"
-                      >
+                        <tr
+                          key={
+                            fees._id
+                          }
+                          className="transition hover:bg-slate-50"
+                        >
 
-                        {/* STUDENT */}
 
-                        <td className="whitespace-nowrap border-b border-slate-100 px-5 py-4 text-sm font-medium text-slate-800">
-                          {fees.student_name || "-"}
-                        </td>
+                          {/* STUDENT */}
 
-                        {/* FATHER */}
+                          <td className="whitespace-nowrap border-b border-slate-100 px-5 py-4 text-sm font-medium text-slate-800">
+                            {
+                              fees.student_name ||
+                              "-"
+                            }
+                          </td>
 
-                        <td className="whitespace-nowrap border-b border-slate-100 px-5 py-4 text-sm text-slate-600">
-                          {fees.father_name || "-"}
-                        </td>
 
-                        {/* ROLL */}
+                          {/* FATHER */}
 
-                        <td className="whitespace-nowrap border-b border-slate-100 px-5 py-4 text-sm text-slate-600">
-                          {fees.roll_no || "-"}
-                        </td>
+                          <td className="whitespace-nowrap border-b border-slate-100 px-5 py-4 text-sm text-slate-600">
+                            {
+                              fees.father_name ||
+                              "-"
+                            }
+                          </td>
 
-                        {/* TRANSPORT */}
 
-                        <td className="border-b border-slate-100 px-5 py-4 text-right text-sm text-slate-600">
-                          ₹{fees.transport_fees || 0}
-                        </td>
+                          {/* ROLL */}
 
-                        {/* TUITION */}
+                          <td className="whitespace-nowrap border-b border-slate-100 px-5 py-4 text-sm text-slate-600">
+                            {
+                              fees.roll_no ||
+                              "-"
+                            }
+                          </td>
 
-                        <td className="border-b border-slate-100 px-5 py-4 text-right text-sm text-slate-600">
-                          ₹{fees.tuition_fees || 0}
-                        </td>
 
-                        {/* EXTRA */}
+                          {/* TRANSPORT */}
 
-                        <td className="border-b border-slate-100 px-5 py-4 text-right text-sm text-slate-600">
-                          ₹{fees.extra_charges || 0}
-                        </td>
+                          <td className="border-b border-slate-100 px-5 py-4 text-right text-sm text-slate-600">
+                            ₹
+                            {
+                              fees.transport_fees ||
+                              0
+                            }
+                          </td>
 
-                        {/* EXAM */}
 
-                        <td className="border-b border-slate-100 px-5 py-4 text-right text-sm text-slate-600">
-                          ₹{fees.exam_fees || 0}
-                        </td>
+                          {/* TUITION */}
 
-                        {/* FINE */}
+                          <td className="border-b border-slate-100 px-5 py-4 text-right text-sm text-slate-600">
+                            ₹
+                            {
+                              fees.tuition_fees ||
+                              0
+                            }
+                          </td>
 
-                        <td className="border-b border-slate-100 px-5 py-4 text-right text-sm text-slate-600">
-                          ₹{fees.fine || 0}
-                        </td>
 
-                        {/* TOTAL */}
+                          {/* EXTRA */}
 
-                        <td className="border-b border-slate-100 px-5 py-4 text-right text-sm font-bold text-blue-700">
-                          ₹{fees.total || 0}
-                        </td>
+                          <td className="border-b border-slate-100 px-5 py-4 text-right text-sm text-slate-600">
+                            ₹
+                            {
+                              fees.extra_charges ||
+                              0
+                            }
+                          </td>
 
-                        {/* DEPOSIT */}
 
-                        <td className="border-b border-slate-100 px-5 py-4 text-right text-sm font-semibold text-green-600">
-                          ₹{fees.deposit || 0}
-                        </td>
+                          {/* EXAM */}
 
-                        {/* BALANCE */}
+                          <td className="border-b border-slate-100 px-5 py-4 text-right text-sm text-slate-600">
+                            ₹
+                            {
+                              fees.exam_fees ||
+                              0
+                            }
+                          </td>
 
-                        <td className="border-b border-slate-100 px-5 py-4 text-right text-sm font-semibold text-red-600">
-                          ₹{fees.balance || 0}
-                        </td>
 
-                        {/* DATE */}
+                          {/* FINE */}
 
-                        <td className="whitespace-nowrap border-b border-slate-100 px-5 py-4 text-sm text-slate-600">
-                          {formatDate(fees.date)}
-                        </td>
+                          <td className="border-b border-slate-100 px-5 py-4 text-right text-sm text-slate-600">
+                            ₹
+                            {
+                              fees.fine ||
+                              0
+                            }
+                          </td>
 
-                        {/* MONTH */}
 
-                        <td className="whitespace-nowrap border-b border-slate-100 px-5 py-4 text-sm text-slate-600">
-                          {fees.month || "-"}
-                        </td>
+                          {/* TOTAL */}
 
-                        {/* ACTION */}
+                          <td className="border-b border-slate-100 px-5 py-4 text-right text-sm font-bold text-blue-700">
+                            ₹
+                            {
+                              fees.total ||
+                              0
+                            }
+                          </td>
 
-                        <td className="border-b border-slate-100 px-5 py-4 text-center">
 
-                          <div className="flex items-center justify-center gap-2">
+                          {/* DEPOSIT */}
 
-                            {/* EDIT */}
+                          <td className="border-b border-slate-100 px-5 py-4 text-right text-sm font-semibold text-green-600">
+                            ₹
+                            {
+                              fees.deposit ||
+                              0
+                            }
+                          </td>
 
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleEdit(fees)
-                              }
-                              className="inline-flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2 text-xs font-semibold text-green-600 transition hover:bg-green-600 hover:text-white"
-                            >
-                              <MdEdit />
 
-                              Edit
-                            </button>
+                          {/* BALANCE */}
 
-                            {/* DELETE */}
+                          <td className="border-b border-slate-100 px-5 py-4 text-right text-sm font-semibold text-red-600">
+                            ₹
+                            {
+                              fees.balance ||
+                              0
+                            }
+                          </td>
 
-                            <button
-                              type="button"
-                              onClick={() =>
-                                deletedata(
-                                  fees._id
-                                )
-                              }
-                              disabled={loading}
-                              className="inline-flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
-                            >
-                              <FaTrash />
 
-                              Delete
+                          {/* DATE */}
 
-                            </button>
+                          <td className="whitespace-nowrap border-b border-slate-100 px-5 py-4 text-sm text-slate-600">
+                            {
+                              formatDate(
+                                fees.date
+                              )
+                            }
+                          </td>
 
-                          </div>
 
-                        </td>
+                          {/* MONTH */}
 
-                      </tr>
+                          <td className="whitespace-nowrap border-b border-slate-100 px-5 py-4 text-sm text-slate-600">
+                            {
+                              fees.month ||
+                              "-"
+                            }
+                          </td>
 
-                    ))
+
+                          {/* =================================================
+                              ACTIONS
+                          ================================================== */}
+
+                          <td className="border-b border-slate-100 px-5 py-4 text-center">
+
+                            <div className="flex items-center justify-center gap-2">
+
+
+                              {/* PRINT */}
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handlePrint(
+                                    fees
+                                  )
+                                }
+                                className="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-600 transition hover:bg-blue-600 hover:text-white"
+                              >
+
+                                <FaPrint />
+
+                                Print
+
+                              </button>
+
+
+                              {/* EDIT */}
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleEdit(
+                                    fees
+                                  )
+                                }
+                                className="inline-flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2 text-xs font-semibold text-green-600 transition hover:bg-green-600 hover:text-white"
+                              >
+
+                                <MdEdit />
+
+                                Edit
+
+                              </button>
+
+
+                              {/* DELETE */}
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  deletedata(
+                                    fees._id
+                                  )
+                                }
+                                disabled={
+                                  loading
+                                }
+                                className="inline-flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                              >
+
+                                <FaTrash />
+
+                                Delete
+
+                              </button>
+
+                            </div>
+
+                          </td>
+
+
+                        </tr>
+
+                      )
+                    )
 
                   ) : (
 
-                    /* ================= EMPTY STATE ================= */
+                    /* =================================================
+                       EMPTY STATE
+                    ================================================== */
 
                     <tr>
 
@@ -937,9 +2237,11 @@ function FeesRecords() {
 
                           </div>
 
+
                           <h3 className="text-lg font-semibold text-slate-700">
                             No fee records found
                           </h3>
+
 
                           <p className="mt-1 text-sm text-slate-500">
 
@@ -963,7 +2265,10 @@ function FeesRecords() {
 
             </div>
 
-            {/* ================= FOOTER ================= */}
+
+            {/* =================================================
+                TABLE FOOTER
+            ================================================== */}
 
             <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-6 py-4">
 
@@ -972,16 +2277,20 @@ function FeesRecords() {
                 Showing{" "}
 
                 <span className="font-semibold text-slate-700">
-                  {filteredFees.length}
-                </span>{" "}
+                  {
+                    filteredFees.length
+                  }
+                </span>
 
-                of{" "}
+                {" "}of{" "}
 
                 <span className="font-semibold text-slate-700">
-                  {feedata.length}
-                </span>{" "}
+                  {
+                    feedata.length
+                  }
+                </span>
 
-                fee records
+                {" "}fee records
 
               </p>
 
@@ -994,7 +2303,9 @@ function FeesRecords() {
       </main>
 
     </div>
+
   );
 }
+
 
 export default FeesRecords;
