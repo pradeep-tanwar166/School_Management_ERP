@@ -6,6 +6,7 @@ import { FaSearch, FaPrint, FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 
 import jsPDF from "jspdf";
+import { toast } from "sonner";
 
 
 function FeesRecords() {
@@ -60,7 +61,7 @@ function FeesRecords() {
 
       console.log("Fetch error:", error);
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
           "Failed to fetch fee records"
       );

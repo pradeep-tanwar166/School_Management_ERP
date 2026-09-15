@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../components/Services/api";
+import { toast } from "sonner";
+
 
 function Fees() {
   const initialData = {
@@ -58,7 +60,7 @@ function Fees() {
 
       console.log("Fees response:", response.data);
 
-      alert("Fees submitted successfully");
+      toast.success("Fees submitted successfully");
 
       // Clear form after successful submission
       SetFeesData(initialData);
@@ -81,7 +83,7 @@ function Fees() {
         error.message
       );
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
           "Failed to submit fees"
       );

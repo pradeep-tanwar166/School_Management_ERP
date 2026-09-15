@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "../Services/api";
-
+import { toast } from "sonner";
 function Login() {
   const navigate = useNavigate();
 
@@ -57,7 +57,7 @@ function Login() {
         response.data.token
       );
 
-      alert("Login Successful");
+      toast.success("Login Successful");
 
       // Clear form
       SetForm({
@@ -71,7 +71,7 @@ function Login() {
     } catch (error) {
       console.log("Login error:", error);
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
         "Invalid email or password"
       );

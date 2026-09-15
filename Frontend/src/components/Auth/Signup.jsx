@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "../Services/api";
+import { toast } from "sonner";
 
 function Signup() {
   const [signupdata, SetSignUpData] = useState({
@@ -42,7 +43,7 @@ function Signup() {
       !signupdata.mobile ||
       !signupdata.password
     ) {
-      alert("Please fill all the fields");
+      toast.error("Please fill all the fields");
       return;
     }
 
@@ -56,7 +57,7 @@ function Signup() {
 
       console.log("Signup response:", response.data);
 
-      alert("Account created successfully");
+      toast.success("Account created successfully");
 
       // Clear form
       SetSignUpData({
@@ -69,7 +70,7 @@ function Signup() {
     } catch (error) {
       console.log("Signup error:", error);
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
           "Failed to create account"
       );

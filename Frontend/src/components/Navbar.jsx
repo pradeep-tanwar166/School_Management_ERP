@@ -1,4 +1,5 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 import logo from "../assets/Surya-logo4.png";
 
@@ -13,7 +14,7 @@ function Navbar({ sidebarWidth, onResize }) {
 
   const logout = () => {
     localStorage.removeItem("token");
-    alert("Logout Successful");
+    toast.success("logout successfull");
     navigate("/login");
   };
 

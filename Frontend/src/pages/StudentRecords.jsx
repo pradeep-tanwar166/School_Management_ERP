@@ -8,6 +8,8 @@ import { FaFileExcel } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import { toast } from "sonner";
+
 
 function StudentRecords() {
   const [students, SetStudents] = useState([]);
@@ -177,7 +179,7 @@ const exportToExcel = () => {
         )
       );
 
-      alert("Student deleted successfully");
+      toast.success("Student deleted successfully");
 
     } catch (error) {
       console.log("FULL ERROR:", error);
@@ -197,7 +199,7 @@ const exportToExcel = () => {
         error.message
       );
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
         error.message ||
         "Failed to delete data"
@@ -267,7 +269,7 @@ const exportToExcel = () => {
       // Close edit form
       setEditingStudent(null);
 
-      alert("Student updated successfully");
+      toast.success("Student updated successfully");
 
     } catch (error) {
       console.log(
@@ -290,7 +292,7 @@ const exportToExcel = () => {
         error.message
       );
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
         error.message ||
         "Failed to update student"

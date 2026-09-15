@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../components/Services/api";
+import { toast } from "sonner";
+
 
 function Admission() {
   const initialData = {
@@ -67,7 +69,7 @@ function Admission() {
         error.message
       );
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
         "Failed to save admission"
       );
