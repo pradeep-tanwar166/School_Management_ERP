@@ -43,7 +43,7 @@ function Signup() {
       !signupdata.mobile ||
       !signupdata.password
     ) {
-      toast.error("Please fill all the fields");
+      toast.warning("Fill all the fields");
       return;
     }
 

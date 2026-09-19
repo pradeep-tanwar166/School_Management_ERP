@@ -14,7 +14,7 @@ function Navbar({ sidebarWidth, onResize }) {
 
   const logout = () => {
     localStorage.removeItem("token");
-    toast.success("logout successfull");
+    toast.success('SignOut')
     navigate("/login");
   };
 

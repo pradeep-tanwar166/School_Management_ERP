@@ -37,7 +37,7 @@ function Login() {
     event.preventDefault();
 
     if (!form.email || !form.password) {
-      alert("Please enter email and password");
+      toast.warning("Enter email and password");
       return;
     }
 

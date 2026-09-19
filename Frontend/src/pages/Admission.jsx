@@ -57,7 +57,7 @@ function Admission() {
 
      
 
-      alert("Admission saved successfully");
+      toast.success("Admission saved successfully");
 
       // Clear form after successful submission
       setFormData(initialData);

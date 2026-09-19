@@ -7,12 +7,16 @@ import StudentRecords from './pages/StudentRecords';
 import FeesRecords from './pages/FeesRecords';
 import { Routes, Route } from 'react-router-dom'
 import PrivateRoutes from "./components/PrivateRoutes";
+import { Toaster } from 'sonner';
 
 
 function App() {
   return (
     <div>
-      
+      <Toaster   position="top-right"
+        richColors
+        closeButton
+        duration={3000}/>
       <Routes>
         <Route path='/login' element={<Login/>}></Route>
  <Route path='/signup' element={<Signup/>}></Route>

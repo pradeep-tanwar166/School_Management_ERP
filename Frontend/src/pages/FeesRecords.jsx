@@ -138,7 +138,7 @@ function FeesRecords() {
         )
       );
 
-      alert(
+      toast.success(
         "Fee record deleted successfully"
       );
 
@@ -154,7 +154,7 @@ function FeesRecords() {
         error.response?.data
       );
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
           "Failed to delete data"
       );
@@ -307,7 +307,7 @@ function FeesRecords() {
 
       setEditingFee(null);
 
-      alert(
+      toast.success(
         "Fee record updated successfully"
       );
 
@@ -333,7 +333,7 @@ function FeesRecords() {
         error.message
       );
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
           error.message ||
           "Failed to update fee record"
@@ -1339,7 +1339,7 @@ function FeesRecords() {
         error
       );
 
-      alert(
+      toast.error(
         "Failed to generate fee receipt PDF"
       );
 
